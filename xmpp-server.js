@@ -8,7 +8,13 @@ var RecipientOffline = require('./modules/offline');
 
 var User = require('./lib/users.js').User;
 
-var configuration = require(process.cwd() + '/' + process.argv[process.argv.length -1]);
+if(process.argv.length === 2) {
+    console.log("Please provide a path to a config path.");
+    process.exit(1);
+}
+
+var configuration = require(process.argv[process.argv.length -1]);
+
 
 // Sets up the server.
 var c2s = new xmpp.C2S(configuration.config);
