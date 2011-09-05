@@ -9,6 +9,10 @@ With package manager [npm](http://npmjs.org/):
 
     npm install node-xmpp-c2s
 
+## Running
+
+<code>node bin/server.js</code>
+
 ## Motivation
 
 One of the key design choices behind node-xmpp was to keep it very lean and only include the bare minimum. However, if you want to get started and run a server with some actual features without re-implementing the wheel, you can run this
