@@ -13,6 +13,8 @@ With package manager [npm](http://npmjs.org/):
 
 ## Running
 
+TODO : we could automate this with a script that asks the right questions to the user when starting.
+
 First, create a config file and place it at <code>/etc/xmpp-server/config.js</code> that includes the following (tls support is optional. You can follow the <a href="http://nodejs.org/docs/v0.4.11/api/tls.html#tLS_">instructions there</a> to create the key and certificate):
 <code>
     exports.config = {
