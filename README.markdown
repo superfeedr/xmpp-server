@@ -13,19 +13,21 @@ With package manager [npm](http://npmjs.org/):
 
 ## Running
 
-First, create a config file that includes the following (tls support is optional. You can follow the <a href="http://nodejs.org/docs/v0.4.11/api/tls.html#tLS_">instructions there</a> to create the key and certificate):
+First, create a config file and place it at <code>/etc/xmpp-server/config.js</code> that includes the following (tls support is optional. You can follow the <a href="http://nodejs.org/docs/v0.4.11/api/tls.html#tLS_">instructions there</a> to create the key and certificate):
 <code>
     exports.config = {
         port: 5222, 
         domain: 'localhost',
         tls: {
-            keyPath: './tls/localhost-key.pem',
-            certPath: './tls/localhost-cert.pem'
+            keyPath: '/etc/xmpp-server/tls/localhost-key.pem',
+            certPath: '/etc/xmpp-server/tls/localhost-cert.pem'
         }
     }
 </code>
 
-<code>node bin/server.js /path/to/config.js</code>
+Then, run the server: 
+
+<code>xmpp-server /etc/xmpp-server/config.js </code>
 
 ## Motivation
 
