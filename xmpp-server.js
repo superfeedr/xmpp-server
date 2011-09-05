@@ -8,16 +8,10 @@ var RecipientOffline = require('./modules/offline');
 
 var User = require('./lib/users.js').User;
 
+var configuration = require(process.cwd() + '/' + process.argv[process.argv.length -1]);
 
 // Sets up the server.
-var c2s = new xmpp.C2S({
-    port: 5222, 
-    domain: 'localhost',
-    tls: {
-        keyPath: './tls/localhost-key.pem',
-        certPath: './tls/localhost-cert.pem'
-    }
-});
+var c2s = new xmpp.C2S(configuration.config);
 
 // Allows the developer to authenticate users against anything they want.
 c2s.on("authenticate", function(jid, password, client, cb) {
