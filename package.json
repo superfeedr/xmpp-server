@@ -19,6 +19,7 @@
     "maintainers": [{
         "name": "Julien51",
         "email": "julien@superfeedr.com",
+        "url": "http://superfeedr.com"
     }],
     "contributors": ["Stephan Maka", "Julien Genestoux"],
     "licenses": [{

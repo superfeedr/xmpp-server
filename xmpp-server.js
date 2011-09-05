@@ -1,10 +1,12 @@
+#!/usr/bin/env node
+
 var xmpp = require('node-xmpp');
 
 // Loading all modules needed
-var SoftwareVersion = require('../modules/software_version'); 
-var RecipientOffline = require('../modules/offline');
+var SoftwareVersion = require('./modules/software_version'); 
+var RecipientOffline = require('./modules/offline');
 
-var User = require('../lib/users.js').User;
+var User = require('./lib/users.js').User;
 
 
 // Sets up the server.
