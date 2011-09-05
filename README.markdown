@@ -1,4 +1,4 @@
-# node-xmpp-c2s
+# xmpp-server
 
 A full XMPP server using node-xmpp, with some modules.
 Feel free to fork this and configure all the modules you need in server.js
@@ -7,7 +7,7 @@ Feel free to fork this and configure all the modules you need in server.js
 
 With package manager [npm](http://npmjs.org/):
 
-    npm install node-xmpp-c2s
+    npm install xmpp-server
 
 ## Running
 
