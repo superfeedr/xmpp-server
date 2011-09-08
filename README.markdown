@@ -40,10 +40,19 @@ Then, run the server:
 
 <code>xmpp-server /etc/xmpp-server/config.js </code>
 
-
 ## Trying
 
 There is a server running at [ouvre-boite.com](xmpp://ouvre-boite.com). You can certainly create an account there, but don't leave any valuable belongings as they will be trashed every couple hours :)
+
+## TODO
+
+* <del>In-band registration</del>
+* <del>C2S</del>
+* <del>TLS</del>
+* Digets Auth
+* Roster
+* Presence
+
 
 ## Dependencies
 
