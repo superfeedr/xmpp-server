@@ -15,7 +15,7 @@ This server uses Redis as its datastore. You need to install [redis >2.2.x](http
 
 4. Install xmpp-server, finally. With package manager [npm](http://npmjs.org/):
 
-    npm install -g xmpp-server 
+<code>npm install -g xmpp-server </code>
 
 ## Running
 
@@ -23,7 +23,8 @@ TODO : we could automate this with a script that asks the right questions to the
 
 First, create a config file and place it at <code>/etc/xmpp-server/config.js</code> that includes the following (tls support is optional. You can follow the <a href="http://nodejs.org/docs/v0.4.11/api/tls.html#tLS_">instructions there</a> to create the key and certificate, and then uncomment the <code>tls</code> lines.):
 
-<code>
+<pre>
+    <code>
     exports.config = {
         port: 5222, 
         domain: 'localhost',
@@ -32,7 +33,7 @@ First, create a config file and place it at <code>/etc/xmpp-server/config.js</co
         //    certPath: '/etc/xmpp-server/tls/localhost-cert.pem'
         //}
     }
-</code>
+</pre></code>
 
 Then, run the server: 
 
