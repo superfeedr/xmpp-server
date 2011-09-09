@@ -10,10 +10,8 @@ function Logger(client) {
     var self = this;
     
     this.format_log = function (message) {
-        return client.identifier + " : " + message
+        return client.streamId + " : " + message
     }
-    
-    client.identifier = new Date().getTime() + "-" + Math.floor(Math.random()*100000);
     
     client.on('stanza', function(stanza) {
         winston.debug(self.format_log(stanza.toString()));
