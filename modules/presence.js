@@ -10,7 +10,6 @@ function Presence(client) {
             if (!stanza.attrs.to && !stanza.attrs.type) {
                 // Section 5.1.1 in http://xmpp.org/rfcs/rfc3921.html#presence
                 if(!client.initial_presence_sent) {
-                    console.log("INITIAL PRESENCE FROM " + client.jid)
                     client.initial_presence_sent = true;
                     if(client.roster) {
                         client.roster.subscriptions(["to", "both"], function(jids) {
@@ -31,7 +30,6 @@ function Presence(client) {
                     client.c2s.connectedClientsForJid(stanza.attrs.from).forEach(function(jid) {
                         if(client.jid.resource != jid.resource) {
                             stanza.attrs.to = jid.toString();
-                            console.log(stanza.toString());
                             client.c2s.router.send(stanza); // TODO: Blocking Outbound Presence Notifications.
                         }
                     })
