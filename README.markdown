@@ -7,11 +7,11 @@ This server uses Redis as its datastore.
 
 <strong>Beware : this project is really early stage... There are a lot of things to fix :) Install it for fun or for help... but probably not for profit just yet!</strong>
 
-1. First, you need **nodejs** installed. Follow [these instructions](https://github.com/joyent/node/wiki/Installation), or skip to 2. if you have it already.
+1. First, you need **nodejs** installed. Pre-compiled packages exist for Unix (Linux, BSD, Mac OS X) as explained in [these instructions](https://github.com/joyent/node/wiki/Installation). Skip to 2. if you already have a working Node.JS environment.
 
-2. Then, you need **npm** installed. Same, follow [these instructions](http://howtonode.org/introduction-to-npm) or skip to 3.
+2. Then, you need **npm** installed. As in step 1, follow [these instructions](http://howtonode.org/introduction-to-npm) or skip to 3.
 
-3. Install **redis** (used to store the data). <code>apt-get install redis</code> should work just fine on most Ubuntus and Debians. Again, skip if you have it!
+3. Install **redis** (used to store the data). <code>apt-get install redis</code> should work just fine on most Ubuntus and Debians. On MacOS X redis can be installed e.g. with Homebrew: <code>brew install redis</code>
 
 4. Install xmpp-server, finally. With package manager [npm](http://npmjs.org/):
 
