@@ -4,38 +4,36 @@ var logger = require('winston');
 // http://xmpp.org/extensions/xep-0160.html
 exports.name = "logger";
 
+function format_log(client, message) {
+    return client.streamId + " : " + message
+}
 
 function Logger(client) {
     
-    var self = this;
-    this.logger = logger;
-    
-    this.format_log = function (message) {
-        return client.streamId + " : " + message
-    }
+    client.logger = logger;
     
     client.on('stanza', function(stanza) {
-        logger.debug(self.format_log(stanza.toString()));
+        logger.debug(format_log(client, stanza.toString()));
     });
     
     client.on('session-started', function() {
-        logger.info(self.format_log(stanza.toString()));
+        logger.info(format_log(client, stanza.toString()));
     });
 
     client.on('auth-success', function(jid) {
-        logger.info(self.format_log("auth-success " + jid));
+        logger.info(format_log(client, "auth-success " + jid));
     });
 
     client.on('auth-failure', function(jid) {
-        logger.info(self.format_log("auth-failure " + jid));
+        logger.info(format_log(client, "auth-failure " + jid));
     });
 
     client.on('registration-success', function(jid) {
-        logger.info(self.format_log("registration-success " + jid));
+        logger.info(format_log(client, "registration-success " + jid));
     });
 
     client.on('registration-failure', function(jid) {
-        logger.info(self.format_log("registration-failure " + jid));
+        logger.info(format_log(client, "registration-failure " + jid));
     });
 }
 
