@@ -11,7 +11,7 @@ This server uses Redis as its datastore.
 
 2. Then, you need **npm** installed. As in step 1, follow [these instructions](http://howtonode.org/introduction-to-npm) or skip to 3.
 
-3. Install **redis** (used to store the data). <code>apt-get install redis</code> should work just fine on most Ubuntus and Debians. On MacOS X redis can be installed e.g. with Homebrew: <code>brew install redis</code>
+3. Install **redis** (used to store the data). <code>apt-get install redis-server</code> should work just fine on most Ubuntus and Debians. On MacOS X redis can be installed e.g. with Homebrew: <code>brew install redis</code>
 
 4. Install xmpp-server, finally. With package manager [npm](http://npmjs.org/):
 
