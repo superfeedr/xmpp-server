@@ -1,6 +1,6 @@
 {
     "name": "xmpp-server",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "XMPP server based on node-xmpp",
     "keywords": "XMPP server node-xmpp chat jabber",
     "author": "Julien Genestoux <julien@superfeedr.com> (http://superfeedr.com)",
