@@ -7,6 +7,7 @@
     "main": "./lib/server",
     "dependencies": {
         "node-xmpp": "https://github.com/superfeedr/node-xmpp/tarball/c2s",
+	"node-stringprep": ">=0.0.5",
         "redis": ">=0.6.7",
         "winston": ">=0.4.0"
     },
