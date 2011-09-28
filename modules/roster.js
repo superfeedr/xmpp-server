@@ -36,9 +36,9 @@ function Roster(client) {
                             // And now send to all sessions.
                             i.attrs.subscription = item.state;
                             stanza.attrs.from = ""; // Remove the from field.
-                            client.c2s.connectedClientsForJid(stanza.attrs.from).forEach(function(jid) {
+                            client.server.connectedClientsForJid(stanza.attrs.from).forEach(function(jid) {
                                 stanza.attrs.to = jid.toString();
-                                client.c2s.router.send(stanza); // TODO: Blocking Outbound Presence Notifications.
+                                client.server.s2s.send(stanza); // TODO: Blocking Outbound Presence Notifications.
                             });
                         });
                     });

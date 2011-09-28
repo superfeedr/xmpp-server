@@ -16,21 +16,21 @@ function Presence(client) {
                             jids.forEach(function(jid) {
                                 stanza.attrs.type = "probe";
                                 stanza.attrs.to = jid;
-                                client.c2s.router.send(stanza); // TODO: Blocking Outbound Presence Notifications.
+                                client.server.s2s.send(stanza); // TODO: Blocking Outbound Presence Notifications.
                             });
                         });
                         client.roster.subscriptions(["from", "both"], function(jids) {
                             jids.forEach(function(jid) {
                                 stanza.attrs.to = jid;
-                                client.c2s.router.send(stanza); // TODO: Blocking Outbound Presence Notifications.
+                                client.server.s2s.send(stanza); // TODO: Blocking Outbound Presence Notifications.
                             });
                         });
                     }
                     // Send the presence to the other resources for this jid, if any.
-                    client.c2s.connectedClientsForJid(stanza.attrs.from).forEach(function(jid) {
+                    client.server.connectedClientsForJid(stanza.attrs.from).forEach(function(jid) {
                         if(client.jid.resource != jid.resource) {
                             stanza.attrs.to = jid.toString();
-                            client.c2s.router.send(stanza); // TODO: Blocking Outbound Presence Notifications.
+                            client.server.s2s.send(stanza); // TODO: Blocking Outbound Presence Notifications.
                         }
                     })
                 }
@@ -40,7 +40,7 @@ function Presence(client) {
                         client.roster.subscriptions(["from", "both"], function(jids) {
                             jids.forEach(function(jid) {
                                 stanza.attrs.to = jid;
-                                client.c2s.router.send(stanza); // TODO: Blocking Outbound Presence Notifications.
+                                client.server.s2s.send(stanza); // TODO: Blocking Outbound Presence Notifications.
                             });
                         });
                     }
@@ -52,10 +52,10 @@ function Presence(client) {
     client.on('disconnect', function() {
         // We need to send a <presence type="offline" > on his behalf
         var stanza = new xmpp.Element('presence', {from: client.jid.toString(), type: "unavailable" });
-        client.c2s.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
+        client.server.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
             if(client.jid.resource != jid.resource) {
                 stanza.attrs.to = jid.toString();
-                client.c2s.router.send(stanza); // TODO: Blocking Outbound Presence Notifications.
+                client.server.s2s.send(stanza); // TODO: Blocking Outbound Presence Notifications.
             }
         });
     });

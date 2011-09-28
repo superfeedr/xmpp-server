@@ -3,6 +3,8 @@ var xmpp = require('node-xmpp');
 /**
 * C2S Router */
 exports.route = function(stanza) {
+    console.log("msg for " + stanza.attrs.to);
+    
     var self = this;
     stanza.attrs.xmlns = 'jabber:client';
     if (stanza.attrs && stanza.attrs.to) {
@@ -12,14 +14,14 @@ exports.route = function(stanza) {
             var sent = false, resource;
             for (resource in self.sessions[toJid.bare().toString()]) {
                 if (toJid.bare().toString() === toJid.toString() || toJid.resource === resource) {
-                    self.sessions[toJid.bare().toString()][resource].send(stanza);
+                    self.sessions[toJid.bare().toString()][resource].client.send(stanza);
                     sent = true;
                 }
             }
             // We couldn't find a connected jid that matches the destination. Let's send it to everyone
             if (!sent) {
                 for (resource in self.sessions[toJid.bare().toString()]) {
-                    self.sessions[toJid.bare().toString()][resource].send(stanza);
+                    self.sessions[toJid.bare().toString()][resource].client.send(stanza);
                     sent = true;
                 }                
             }
@@ -61,7 +63,7 @@ exports.connectedClientsForJid = function(jid) {
     else {
         var jids = [];
         for(var resource in this.sessions[jid.bare().toString()]) {
-            jids.push(new JID(jid.bare().toString() + "/" + resource));
+            jids.push(new xmpp.JID(jid.bare().toString() + "/" + resource));
         }
         return jids;
     }
