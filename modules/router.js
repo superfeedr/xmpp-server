@@ -3,8 +3,6 @@ var xmpp = require('node-xmpp');
 /**
 * C2S Router */
 exports.route = function(stanza) {
-    console.log("msg for " + stanza.attrs.to);
-    
     var self = this;
     stanza.attrs.xmlns = 'jabber:client';
     if (stanza.attrs && stanza.attrs.to) {
