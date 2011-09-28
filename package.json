@@ -6,8 +6,8 @@
     "author": "Julien Genestoux <julien@superfeedr.com> (http://superfeedr.com)",
     "main": "./lib/server",
     "dependencies": {
-        "node-xmpp": "https://github.com/astro/node-xmpp/tarball/master"
-	"node-stringprep": ">=0.0.5",
+        "node-xmpp": "https://github.com/astro/node-xmpp/tarball/master",
+        "node-stringprep": ">=0.0.5",
         "redis": ">=0.6.7",
         "winston": ">=0.4.0"
     },
