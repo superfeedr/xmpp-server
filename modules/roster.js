@@ -14,7 +14,7 @@ exports.name = "roster";
 */
 
 function Roster(client) {
-    client.on('stanza', function(stanza) {
+    client.on('inStanza', function(stanza) {
         if (stanza.is('iq') && (query = stanza.getChild('query', "jabber:iq:roster"))) {
             if(stanza.attrs.type === "get") {
                 stanza.attrs.type = "result";

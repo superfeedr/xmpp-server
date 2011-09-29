@@ -12,6 +12,7 @@ exports.route = function(stanza) {
             var sent = false, resource;
             for (resource in self.sessions[toJid.bare().toString()]) {
                 if (toJid.bare().toString() === toJid.toString() || toJid.resource === resource) {
+                    self.sessions[toJid.bare().toString()][resource].client.emit("outStanza", stanza);
                     self.sessions[toJid.bare().toString()][resource].client.send(stanza);
                     sent = true;
                 }
@@ -19,6 +20,7 @@ exports.route = function(stanza) {
             // We couldn't find a connected jid that matches the destination. Let's send it to everyone
             if (!sent) {
                 for (resource in self.sessions[toJid.bare().toString()]) {
+                    self.sessions[toJid.bare().toString()][resource].client.emit("outStanza", stanza);
                     self.sessions[toJid.bare().toString()][resource].client.send(stanza);
                     sent = true;
                 }                

@@ -10,7 +10,7 @@ exports.default = {
 };
 
 function SoftwareVersionMixin(client) {
-    client.on('stanza', function(stanza) {
+    client.on('inStanza', function(stanza) {
         if (stanza.is('iq') && (query = stanza.getChild('query', "jabber:iq:version"))) {
             stanza.attrs.type = "result";
             stanza.attrs.to = stanza.attrs.from;

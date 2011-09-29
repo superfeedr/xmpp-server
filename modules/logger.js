@@ -12,8 +12,12 @@ function Logger(client) {
     
     client.logger = logger;
     
-    client.on('stanza', function(stanza) {
-        // logger.debug(format_log(client, stanza.toString()));
+    client.on('inStanza', function(stanza) {
+        logger.debug(format_log(client, ">> " + stanza.toString()));
+    });
+
+    client.on('outStanza', function(stanza) {
+        logger.debug(format_log(client, "<< " + stanza.toString()));
     });
     
     client.on('session-started', function() {

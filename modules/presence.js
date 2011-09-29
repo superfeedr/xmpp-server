@@ -4,7 +4,7 @@ var xmpp = require('node-xmpp');
 exports.name = "presence";
 
 function Presence(client) {
-    client.on('stanza', function(stanza) {
+    client.on('inStanza', function(stanza) {
         if (stanza.is('presence')) {
             // Ok, now we must do things =)
             if (!stanza.attrs.to && !stanza.attrs.type) {
