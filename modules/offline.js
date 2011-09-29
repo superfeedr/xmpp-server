@@ -1,35 +1,46 @@
-// http://xmpp.org/extensions/xep-0160.html
-exports.name = "mod_offline";
-
-exports.store_offline_message = undefined; // By default we won't store. If you do, though, you want to add add a delay element to the stanza!
-
-exports.messages_for_jid = function(jid, callback) {
-    // callback(); // The callback needs to be called for each message
-}
-
-function RecipientOffline(client) {
+var xmpp = require('node-xmpp');
+var redis = require("redis").createClient();
+var ltx = require("ltx");
     
-    // User just connected. We may retrieve each offline message and send it.
-    client.on('session-started', function() {
-        exports.messages_for_jid(client.jid, function(stanza) {
-            client.send(stanza);
-        });
-    });
-    
-    // When this client tried to send a message to an offline client.
-    client.on('recipient_offline', function(stanza) {
-        if(!exports.store_offline_message) {
-            stanza.attrs.type = "error";
-            stanza.attrs.from = new xmpp.JID(stanza.attrs.to).bare();
-            stanza.attrs.to = client.jid;
-            stanza.c("error", {type: "cancel", code: "503"}).c("service-unavailable", {xmlns: "urn:ietf:params:xml:ns:xmpp-stanzas"});
-            client.send(stanza)
-        }
-        else {
-            exports.store_offline_message(stanza);
+redis.on("error", function (err) {
+    console.log("Redis connection error to " + redis.host + ":" + redis.port + " - " + err);
+});
+
+function deliverNextOfflineMessageforClient(client) {
+    redis.rpop(client.jid.bare().toString(), function(error, stanza) {
+        if(stanza) {
+            client.send(ltx.parse(stanza));
+            deliverNextOfflineMessageforClient(client);
         }
     });
 }
 
-exports.mod = RecipientOffline;
+exports.deliverOfflineMessagesForClient = function(client) {
+    // The callback needs to be called for each message
+    console.log("Delivering offline messages to " + client.jid);
+    deliverNextOfflineMessageforClient(client);
+}
+
+exports.storeOfflineMessage = function(c2s, stanza) {
+    // The callback needs to be called for each message
+    console.log("Storing stanza for " + stanza.attrs.to);
+    stanza.c("delay", {xmlns: 'urn:xmpp:delay', from: '', stamp: ISODateString(new Date())}).t("Offline Storage");
+    jid = new xmpp.JID(stanza.attrs.to);
+    redis.lpush(jid.bare().toString(), stanza, function() {
+        redis.ltrim(jid.bare().toString(), 0, 9);
+    });
+}
+
+
+function ISODateString(d) {
+    function pad(n){
+        return n&lt;10 ? '0'+n : n
+    }
+    return d.getUTCFullYear()+'-'
+    + pad(d.getUTCMonth()+1)+'-'
+    + pad(d.getUTCDate())+'T'
+    + pad(d.getUTCHours())+':'
+    + pad(d.getUTCMinutes())+':'
+    + pad(d.getUTCSeconds())+'Z'
+}
 
