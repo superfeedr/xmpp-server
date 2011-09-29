@@ -20,11 +20,13 @@ exports.deliverOfflineMessagesForClient = function(client) {
 }
 
 exports.storeOfflineMessage = function(c2s, stanza) {
-    stanza.c("delay", {xmlns: 'urn:xmpp:delay', from: '', stamp: ISODateString(new Date())}).t("Offline Storage");
-    jid = new xmpp.JID(stanza.attrs.to);
-    redis.lpush(jid.bare().toString(), stanza, function() {
-        redis.ltrim(jid.bare().toString(), 0, 9);
-    });
+    if(stanza.is("message")) {
+        stanza.c("delay", {xmlns: 'urn:xmpp:delay', from: '', stamp: ISODateString(new Date())}).t("Offline Storage");
+        jid = new xmpp.JID(stanza.attrs.to);
+        redis.lpush(jid.bare().toString(), stanza, function() {
+            redis.ltrim(jid.bare().toString(), 0, 9);
+        });
+    }
 }
 
 
