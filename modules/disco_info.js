@@ -1,4 +1,5 @@
 var xmpp = require('node-xmpp');
+var ltx = require('ltx');
 
 // XEP-0030: Service Discovery
 // http://xmpp.org/extensions/xep-0030.html
@@ -6,21 +7,19 @@ var xmpp = require('node-xmpp');
 exports.name = "mod_disco_info";
 
 function DiscoInfoMixin(client) {
-    client.on('inStanza', function(stanza) {
+    client.on('inStanza', function(stz) {
+        var stanza = ltx.parse(stz.toString());
         if (stanza.is('iq') && (query = stanza.getChild('query', "http://jabber.org/protocol/disco#info"))) {
             stanza.attrs.type = "error";
-            var to = stanza.attrs.to;
             stanza.attrs.to = stanza.attrs.from;
-            stanza.attrs.from = to;
-            client.send(stanza);
+            delete stanza.attrs.from;
+            client.emit("outStanza", stanza);
         } else if (stanza.is('iq') && (query = stanza.getChild('query', "http://jabber.org/protocol/disco#items"))) {
             stanza.attrs.type = "error";
-            var to = stanza.attrs.to;
             stanza.attrs.to = stanza.attrs.from;
-            stanza.attrs.from = to;
-            client.send(stanza);
+            delete stanza.attrs.from;
+            client.emit("outStanza", stanza);
         }
-        return;
     });
 }
 

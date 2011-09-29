@@ -1,6 +1,6 @@
 var xmpp = require('node-xmpp');
 var redis = require("redis").createClient();
-var ltx = require("ltx");
+var ltx = require('ltx');
     
 redis.on("error", function (err) {
     console.log("Redis connection error to " + redis.host + ":" + redis.port + " - " + err);
@@ -9,7 +9,7 @@ redis.on("error", function (err) {
 function deliverNextOfflineMessageforClient(client) {
     redis.rpop(client.jid.bare().toString(), function(error, stanza) {
         if(stanza) {
-            client.send(ltx.parse(stanza));
+            client.emit("outStanza", ltx.parse(stanza));
             deliverNextOfflineMessageforClient(client);
         }
     });

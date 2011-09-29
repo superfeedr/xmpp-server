@@ -1,5 +1,6 @@
 var xmpp = require('node-xmpp');
 var r = require('../lib/roster.js');
+var ltx = require('ltx');
 var RosterStorage = r.Roster;
 var RosterItemStorage = r.RosterItem;
 
@@ -14,7 +15,8 @@ exports.name = "roster";
 */
 
 function Roster(client) {
-    client.on('inStanza', function(stanza) {
+    client.on('inStanza', function(stz) {
+        var stanza = ltx.parse(stz.toString());
         if (stanza.is('iq') && (query = stanza.getChild('query', "jabber:iq:roster"))) {
             if(stanza.attrs.type === "get") {
                 stanza.attrs.type = "result";
@@ -23,7 +25,7 @@ function Roster(client) {
                         query.c("item", {jid: item.jid, name: item.name, subscription: item.state});
                     });
                     stanza.attrs.to = stanza.attrs.from;
-                    client.send(stanza);
+                    client.emit("outStanza", stanza); 
                 });
             }
             else if(stanza.attrs.type === "set") {
@@ -38,7 +40,7 @@ function Roster(client) {
                             stanza.attrs.from = ""; // Remove the from field.
                             client.server.connectedClientsForJid(stanza.attrs.from).forEach(function(jid) {
                                 stanza.attrs.to = jid.toString();
-                                client.server.s2s.send(stanza); // TODO: Blocking Outbound Presence Notifications.
+                                client.emit("outStanza", stanza); 
                             });
                         });
                     });

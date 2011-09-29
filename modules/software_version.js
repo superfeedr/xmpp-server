@@ -1,6 +1,8 @@
 var xmpp = require('node-xmpp');
+var ltx = require('ltx');
 
-// // XEP-0092: Software Version
+// XEP-0092: Software Version
+// http://xmpp.org/extensions/xep-0092.html
 exports.name = "mod_version";
 
 exports.default = {
@@ -10,7 +12,8 @@ exports.default = {
 };
 
 function SoftwareVersionMixin(client) {
-    client.on('inStanza', function(stanza) {
+    client.on('inStanza', function(stz) {
+        var stanza = ltx.parse(stz.toString());
         if (stanza.is('iq') && (query = stanza.getChild('query', "jabber:iq:version"))) {
             stanza.attrs.type = "result";
             stanza.attrs.to = stanza.attrs.from;
@@ -37,7 +40,7 @@ function SoftwareVersionMixin(client) {
             else {
                 query.c("os").t(exports.os);
             }
-            client.send(stanza);
+            client.emit("outStanza", stanza); 
         }
     });
 }
