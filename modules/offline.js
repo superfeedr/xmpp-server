@@ -16,14 +16,10 @@ function deliverNextOfflineMessageforClient(client) {
 }
 
 exports.deliverOfflineMessagesForClient = function(client) {
-    // The callback needs to be called for each message
-    console.log("Delivering offline messages to " + client.jid);
     deliverNextOfflineMessageforClient(client);
 }
 
 exports.storeOfflineMessage = function(c2s, stanza) {
-    // The callback needs to be called for each message
-    console.log("Storing stanza for " + stanza.attrs.to);
     stanza.c("delay", {xmlns: 'urn:xmpp:delay', from: '', stamp: ISODateString(new Date())}).t("Offline Storage");
     jid = new xmpp.JID(stanza.attrs.to);
     redis.lpush(jid.bare().toString(), stanza, function() {
@@ -34,7 +30,7 @@ exports.storeOfflineMessage = function(c2s, stanza) {
 
 function ISODateString(d) {
     function pad(n){
-        return n&lt;10 ? '0'+n : n
+        return n<10 ? '0'+n : n
     }
     return d.getUTCFullYear()+'-'
     + pad(d.getUTCMonth()+1)+'-'
