@@ -9,9 +9,8 @@ function format_log(client, message) {
 }
 
 function Logger(client) {
-    
     client.logger = logger;
-    
+
     client.on('inStanza', function(stanza) {
         logger.debug(format_log(client, ">> " + stanza.toString()));
     });
@@ -19,7 +18,7 @@ function Logger(client) {
     client.on('outStanza', function(stanza) {
         logger.debug(format_log(client, "<< " + stanza.toString()));
     });
-    
+
     client.on('session-started', function() {
         logger.info(format_log(client, stanza.toString()));
     });
@@ -41,6 +40,4 @@ function Logger(client) {
     });
 }
 
-
 exports.mod = Logger;
-
