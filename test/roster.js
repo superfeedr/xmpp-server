@@ -114,7 +114,8 @@ suite.addBatch({
         topic: function() {
             var self = this;
             Roster.find("julien@superfeedr.com", function(roster) {
-                roster.add(new RosterItem(roster, "hello@msgboy.com", "both", "Msgboy"), function(item) {
+                var item = new RosterItem(roster, "hello@msgboy.com", "both", "Msgboy");
+                item.save(function(item) {
                     Roster.find("julien@superfeedr.com", function(roster) {
                         self.callback(null, roster);
                     });

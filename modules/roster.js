@@ -16,11 +16,13 @@ exports.name = "roster";
 
 function Roster(client) {
     client.on('inStanza', function(stz) {
+        var self = this;
         var stanza = ltx.parse(stz.toString());
+        var query = null;
         if (stanza.is('iq') && (query = stanza.getChild('query', "jabber:iq:roster"))) {
             if(stanza.attrs.type === "get") {
                 stanza.attrs.type = "result";
-                RosterStorage.find(stanza.attrs.from, function(roster) {
+                RosterStorage.find(new xmpp.JID(stanza.attrs.from).bare().toString(), function(roster) {
                     roster.items.forEach(function(item) {
                         query.c("item", {jid: item.jid, name: item.name, subscription: item.state});
                     });
@@ -30,15 +32,15 @@ function Roster(client) {
             }
             else if(stanza.attrs.type === "set") {
                 var i = query.getChild('item', "jabber:iq:roster");
-                RosterStorage.find(stanza.attrs.from, function(roster) {
+                RosterStorage.find(new xmpp.JID(stanza.attrs.from).bare().toString(), function(roster) {
                     RosterItemStorage.find(roster, i.attrs.jid, function(item) {
-                        item.state = i.attrs.subscription || "none";
+                        item.state = i.attrs.subscription || "to";
                         item.name = i.attrs.name;
                         item.save(function() {
                             // And now send to all sessions.
                             i.attrs.subscription = item.state;
                             stanza.attrs.from = ""; // Remove the from field.
-                            client.server.connectedClientsForJid(stanza.attrs.from).forEach(function(jid) {
+                            client.server.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
                                 stanza.attrs.to = jid.toString();
                                 client.emit("outStanza", stanza); 
                             });
