@@ -1,7 +1,7 @@
 var xmpp = require('node-xmpp');
 var redis = require("redis").createClient();
 var ltx = require('ltx');
-    
+
 redis.on("error", function (err) {
     console.log("Redis connection error to " + redis.host + ":" + redis.port + " - " + err);
 });
@@ -15,11 +15,22 @@ function deliverNextOfflineMessageforClient(client) {
     });
 }
 
-exports.deliverOfflineMessagesForClient = function(client) {
+function deliverOfflineMessagesForClient(client) {
     deliverNextOfflineMessageforClient(client);
 }
 
-exports.storeOfflineMessage = function(c2s, stanza) {
+
+// http://xmpp.org/extensions/xep-0160.html
+exports.name = "offline";
+
+function RecipientOffline(client) {
+    client.on("online", function() {
+        deliverOfflineMessagesForClient(client);
+    });
+}
+
+exports.mod = RecipientOffline;
+exports.storeOfflineMessage = function(stanza) {
     if(stanza.is("message")) {
         stanza.c("delay", {xmlns: 'urn:xmpp:delay', from: '', stamp: ISODateString(new Date())}).t("Offline Storage");
         jid = new xmpp.JID(stanza.attrs.to);
