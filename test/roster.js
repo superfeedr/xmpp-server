@@ -9,7 +9,7 @@ var RosterItem = r.RosterItem;
 var suite = vows.describe('RosterItem');
 
 suite.addBatch({
-    'save': {
+    'RosterItem::save': {
         topic: function() {
             var self = this;
             var roster = new Roster("julien@ouvre-boite.com");
@@ -31,29 +31,33 @@ suite.addBatch({
 });
 
 suite.addBatch({
-    'save': {
+    'RosterItem::delete': {
         topic: function() {
             var self = this;
             var roster = new Roster("julien@ouvre-boite.com");
-            var item  = new RosterItem(roster, "astro@remote.com", "from", "Julien")
+            var item  = new RosterItem(roster, "friend@remote.com", "from", "Stephan")
             item.save(function() {
-                RosterItem.find(roster, "astro@remote.com", function(item) {
+                RosterItem.find(roster, "friend@remote.com", function(item) {
                     item.delete(function() {
-                        RosterItem.find(roster, "nope@remote.com", function(item) {
-                            self.callback(null, item)
+                        RosterItem.find(roster, "friend@remote.com", function(i) {
+                            self.callback(null, i)
                         });
                     });
                 });
             });
         },
-        'it should save': function (error, item) {
-            assert.isNull (item);       
+        'it should return an item with subscription to none': function (error, item) {
+            assert.isObject (item); 
+            assert.equal(item.roster.owner, "julien@ouvre-boite.com");
+            assert.equal(item.jid, "friend@remote.com");
+            assert.equal(item.state, "none");
+            assert.equal(item.name, "");
         }
     }
 });
 
 suite.addBatch({
-    'find': {
+    'RosterItem::find': {
         topic: function() {
             var self = this;
             var roster = new Roster("julien@ouvre-boite.com");
@@ -62,14 +66,18 @@ suite.addBatch({
             });
         },
         'get the user': function (item) {
-            assert.isNull (item);       
+            assert.isObject (item); 
+            assert.equal(item.roster.owner, "julien@ouvre-boite.com");
+            assert.equal(item.jid, "nope@remote.com");
+            assert.equal(item.state, "none");
+            assert.equal(item.name, "");
         }
     }
 });
 
 
 suite.addBatch({
-    'find': {
+    'Roster::find': {
         topic: function() {
             var self = this;
             Roster.find("julien@superfeedr.com", function(roster) {
@@ -82,6 +90,24 @@ suite.addBatch({
         }
     }
 });
+
+
+suite.addBatch({
+    'Roster::find': {
+        topic: function() {
+            var self = this;
+            Roster.find("noroster@superfeedr.com", function(roster) {
+                self.callback(null, roster);
+            });
+        },
+        'return an empty roster': function (err, roster) {
+            assert.isObject (roster); 
+            assert.equal(roster.owner, "noroster@superfeedr.com");
+            assert.equal(roster.items.length, 0);
+        }
+    }
+});
+
 
 suite.addBatch({
     'add': {
