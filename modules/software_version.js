@@ -40,7 +40,7 @@ function SoftwareVersionMixin(client) {
             else {
                 query.c("os").t(exports.os);
             }
-            client.emit("outStanza", stanza); 
+            client.emit('outStanza', stanza); 
         }
     });
 }

@@ -13,7 +13,7 @@ function VCardMixin(client) {
             stanza.attrs.type = "error";
             stanza.attrs.to = stanza.attrs.from;
             delete stanza.attrs.from;
-            client.emit("outStanza", stanza);
+            client.emit('outStanza', stanza);
         }
         return;
     });

@@ -5,26 +5,28 @@ var ltx = require('ltx');
 exports.name = "presence";
 
 function Presence(client) {
+    client.initial_presence_sent = false;
+    
     client.on('inStanza', function(stz) {
         var stanza = ltx.parse(stz.toString());
         if (stanza.is('presence')) {
             // Ok, now we must do things =)
-            if (!stanza.attrs.to && !stanza.attrs.type) {
+            if ((!stanza.attrs.to || stanza.attrs.to === client.server.options.domain) && !stanza.attrs.type) {
                 // Section 5.1.1 in http://xmpp.org/rfcs/rfc3921.html#presence
                 if(!client.initial_presence_sent) {
                     client.initial_presence_sent = true;
                     if(client.roster) {
-                        client.roster.subscriptions(["to", "both"], function(jids) {
-                            jids.forEach(function(jid) {
-                                stanza.attrs.type = "probe";
-                                stanza.attrs.to = jid;
-                                client.emit("outStanza", stanza); // TODO: Blocking Outbound Presence Notifications.
-                            });
+                        client.roster.eachSubscription(["to", "both"], function(item) {
+                            stanza.attrs.type = "probe";
+                            stanza.attrs.to = item.jid;
+                            client.emit("inStanza", stanza); // TODO: Blocking Outbound Presence Notifications.
                         });
                         client.roster.subscriptions(["from", "both"], function(jids) {
                             jids.forEach(function(jid) {
                                 stanza.attrs.to = jid;
-                                client.emit("outStanza", stanza); // TODO: Blocking Outbound Presence Notifications.
+                                client.emit("inStanza", stanza); // TODO: Blocking Outbound Presence Notifications.
+                                client.emit("inStanza", stanza);
+                                
                             });
                         });
                     }
@@ -32,7 +34,7 @@ function Presence(client) {
                     client.server.connectedClientsForJid(stanza.attrs.from).forEach(function(jid) {
                         if(client.jid.resource != jid.resource) {
                             stanza.attrs.to = jid.toString();
-                            client.emit("outStanza", stanza); // TODO: Blocking Outbound Presence Notifications.
+                            client.emit("inStanza", stanza); // TODO: Blocking Outbound Presence Notifications.
                         }
                     })
                 }
@@ -42,7 +44,7 @@ function Presence(client) {
                         client.roster.subscriptions(["from", "both"], function(jids) {
                             jids.forEach(function(jid) {
                                 stanza.attrs.to = jid;
-                                client.emit("outStanza", stanza); // TODO: Blocking Outbound Presence Notifications.
+                                client.emit("inStanza", stanza); // TODO: Blocking Outbound Presence Notifications.
                             });
                         });
                     }
@@ -62,7 +64,7 @@ function Presence(client) {
         client.server.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
             if(client.jid.resource != jid.resource) {
                 stanza.attrs.to = jid.toString();
-                client.emit("outStanza", stanza); // TODO: Blocking Outbound Presence Notifications.
+                client.emit('outStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
             }
         });
     });

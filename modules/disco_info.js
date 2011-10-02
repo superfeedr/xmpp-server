@@ -13,12 +13,12 @@ function DiscoInfoMixin(client) {
             stanza.attrs.type = "error";
             stanza.attrs.to = stanza.attrs.from;
             delete stanza.attrs.from;
-            client.emit("outStanza", stanza);
+            client.emit('outStanza', stanza);
         } else if (stanza.is('iq') && (query = stanza.getChild('query', "http://jabber.org/protocol/disco#items"))) {
             stanza.attrs.type = "error";
             stanza.attrs.to = stanza.attrs.from;
             delete stanza.attrs.from;
-            client.emit("outStanza", stanza);
+            client.emit('outStanza', stanza);
         }
     });
 }

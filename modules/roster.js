@@ -17,6 +17,10 @@ exports.name = "roster";
 function Roster(client) {
     client.roster = new RosterStorage();
     
+    client.on('auth-success', function(jid) {
+        client.roster.owner = jid.bare().toString();
+    });
+    
     client.on('inStanza', function(stz) {
         var self = this;
         var stanza = ltx.parse(stz.toString());
@@ -29,24 +33,44 @@ function Roster(client) {
                         query.c("item", {jid: item.jid, name: item.name, subscription: item.state});
                     });
                     stanza.attrs.to = stanza.attrs.from;
-                    client.emit("outStanza", stanza); 
+                    client.emit('outStanza', stanza); 
                 });
             }
             else if(stanza.attrs.type === "set") {
                 var i = query.getChild('item', "jabber:iq:roster");
                 RosterStorage.find(new xmpp.JID(stanza.attrs.from).bare().toString(), function(roster) {
-                    RosterItemStorage.find(roster, i.attrs.jid, function(item) {
-                        item.state = i.attrs.subscription || "to";
-                        item.name = i.attrs.name;
-                        item.save(function() {
-                            // And now send to all sessions.
-                            i.attrs.subscription = item.state;
-                            stanza.attrs.from = ""; // Remove the from field.
-                            client.server.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
-                                stanza.attrs.to = jid.toString();
-                                client.emit("outStanza", stanza); 
+                    RosterItemStorage.find(roster, new xmpp.JID(i.attrs.jid).bare().toString(), function(item) {
+                        if(i.attrs.subscription === "remove") {
+                            item.delete(function() {
+                                // And now send to all sessions.
+                                i.attrs.subscription = 'remove';
+                                stanza.attrs.from = client.server.options.domain; // Remove the from field.
+                                client.server.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
+                                    stanza.attrs.to = jid.toString();
+                                    client.emit("inStanza", stanza); 
+                                });
                             });
-                        });
+                        } else {
+                            if(item.state === "from" && i.attrs.subscription === "to") {
+                                item.state = "both";
+                            }
+                            else if(item.state === "to" && i.attrs.subscription === "from") {
+                                item.state = "both";
+                            }
+                            else {
+                                item.state = i.attrs.subscription || "to";
+                            }
+                            item.name = i.attrs.name || i.attrs.jid;
+                            item.save(function() {
+                                // And now send to all sessions.
+                                i.attrs.subscription = item.state;
+                                stanza.attrs.from = client.server.options.domain; // Remove the from field.
+                                client.server.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
+                                    stanza.attrs.to = jid.toString();
+                                    client.emit("inStanza", stanza); 
+                                });
+                            });
+                        }
                     });
                 });
             } else if(stanza.attrs.type === "result") {
