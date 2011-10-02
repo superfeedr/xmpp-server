@@ -55,7 +55,15 @@ function Presence(client) {
 
     client.on('outStanza', function(stanza) {
         // Section 5.1.3 in http://xmpp.org/rfcs/rfc3921.html#presence
-        // TODO
+        // TODO : HANDLE THINGS WHENE THE CLIENT IS OFFLINE TOO!
+        var stanza = ltx.parse(stz.toString());
+        if (stanza.is('presence')) {
+            if(stanza.attrs.type === "probe") {
+                if(client.roster) {
+                
+                }
+            }
+        }
     });
     
     client.on('disconnect', function() {
