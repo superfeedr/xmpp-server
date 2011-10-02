@@ -15,6 +15,8 @@ exports.name = "roster";
 */
 
 function Roster(client) {
+    client.roster = new RosterStorage();
+    
     client.on('inStanza', function(stz) {
         var self = this;
         var stanza = ltx.parse(stz.toString());
