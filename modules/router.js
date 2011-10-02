@@ -3,10 +3,17 @@ var ltx = require('ltx');
 
 /**
 * C2S Router */
-exports.route = function(stanza) {
+function Router(server) {
+    this.server = server;
+    this.sessions = {};
+}
+
+/**
+* Routes messages */
+Router.prototype.route = function(stanza) {
     var self = this;
     stanza.attrs.xmlns = 'jabber:client';
-    if (stanza.attrs && stanza.attrs.to) {
+    if (stanza.attrs && stanza.attrs.to && stanza.attrs.to !== this.server.options.domain) {
         var toJid = new xmpp.JID(stanza.attrs.to);
         if (self.sessions.hasOwnProperty(toJid.bare().toString())) {
             // Now loop over all the sesssions and only send to the right jid(s)
@@ -27,11 +34,11 @@ exports.route = function(stanza) {
             // We couldn't actually send to anyone!
             if (!sent) {
                 delete self.sessions[toJid.bare().toString()];
-                self.emit("recipient_offline", stanza);
+                self.server.emit("recipient_offline", stanza);
             }
         }
         else {
-            self.emit("recipient_offline", stanza);
+            self.server.emit("recipient_offline", stanza);
         }
     }
     else {
@@ -43,7 +50,7 @@ exports.route = function(stanza) {
 /**
  * Registers a route (jid => specific client connection)
  */
-exports.registerRoute = function(jid, client) {
+Router.prototype.registerRoute = function(jid, client) {
     // What if we have a conflict! TOFIX
     if (!this.sessions.hasOwnProperty(jid.bare().toString()))
         this.sessions[jid.bare().toString()] = {}; 
@@ -55,7 +62,7 @@ exports.registerRoute = function(jid, client) {
 /**
  * Returns the list of jids connected for a specific jid.
  */
-exports.connectedClientsForJid = function(jid) {
+Router.prototype.connectedClientsForJid = function(jid) {
     jid = new xmpp.JID(jid);
     if (!this.sessions.hasOwnProperty(jid.bare().toString())) {
         return [];
@@ -72,7 +79,7 @@ exports.connectedClientsForJid = function(jid) {
 /**
  * Unregisters a route (jid => specific client connection)
  */
-exports.unregisterRoute = function(jid, client) {
+Router.prototype.unregisterRoute = function(jid, client) {
     if (!this.sessions.hasOwnProperty(jid.bare().toString())) {
         // Hum. What? That can't be.
     } else {
@@ -80,3 +87,6 @@ exports.unregisterRoute = function(jid, client) {
     }
     return true;
 };
+
+
+exports.Router = Router;

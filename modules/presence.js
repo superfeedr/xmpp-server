@@ -29,7 +29,7 @@ function Presence(client) {
                         });
                     }
                     // Send the presence to the other resources for this jid, if any.
-                    client.server.connectedClientsForJid(stanza.attrs.from).forEach(function(jid) {
+                    client.server.router.connectedClientsForJid(stanza.attrs.from).forEach(function(jid) {
                         if(client.jid.resource != jid.resource) {
                             stanza.attrs.to = jid.toString();
                             client.server.emit(client, 'inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
@@ -70,7 +70,7 @@ function Presence(client) {
     client.on('disconnect', function() {
         // We need to send a <presence type="offline" > on his behalf
         var stanza = new xmpp.Element('presence', {from: client.jid.toString(), type: "unavailable" });
-        client.server.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
+        client.server.router.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
             if(client.jid.resource != jid.resource) {
                 stanza.attrs.to = jid.toString();
                 client.emit('outStanza', stanza); // TODO: Blocking Outbound Presence Notifications.

@@ -45,7 +45,7 @@ function Roster(client) {
                                 // And now send to all sessions.
                                 i.attrs.subscription = 'remove';
                                 stanza.attrs.from = client.server.options.domain; // Remove the from field.
-                                client.server.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
+                                client.server.router.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
                                     stanza.attrs.to = jid.toString();
                                     client.server.emit(client, 'inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
                                 });
@@ -65,7 +65,7 @@ function Roster(client) {
                                 // And now send to all sessions.
                                 i.attrs.subscription = item.state;
                                 stanza.attrs.from = client.server.options.domain; // Remove the from field.
-                                client.server.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
+                                client.server.router.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
                                     stanza.attrs.to = jid.toString();
                                     client.server.emit(client, 'inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
                                 });
