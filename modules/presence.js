@@ -19,14 +19,12 @@ function Presence(client) {
                         client.roster.eachSubscription(["to", "both"], function(item) {
                             stanza.attrs.type = "probe";
                             stanza.attrs.to = item.jid;
-                            client.emit("inStanza", stanza); // TODO: Blocking Outbound Presence Notifications.
+                            client.s2.emit('inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
                         });
                         client.roster.subscriptions(["from", "both"], function(jids) {
                             jids.forEach(function(jid) {
                                 stanza.attrs.to = jid;
-                                client.emit("inStanza", stanza); // TODO: Blocking Outbound Presence Notifications.
-                                client.emit("inStanza", stanza);
-                                
+                                client.s2.emit('inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
                             });
                         });
                     }
@@ -34,7 +32,7 @@ function Presence(client) {
                     client.server.connectedClientsForJid(stanza.attrs.from).forEach(function(jid) {
                         if(client.jid.resource != jid.resource) {
                             stanza.attrs.to = jid.toString();
-                            client.emit("inStanza", stanza); // TODO: Blocking Outbound Presence Notifications.
+                            client.s2.emit('inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
                         }
                     })
                 }
@@ -44,7 +42,7 @@ function Presence(client) {
                         client.roster.subscriptions(["from", "both"], function(jids) {
                             jids.forEach(function(jid) {
                                 stanza.attrs.to = jid;
-                                client.emit("inStanza", stanza); // TODO: Blocking Outbound Presence Notifications.
+                                client.s2.emit('inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
                             });
                         });
                     }
@@ -60,7 +58,10 @@ function Presence(client) {
         if (stanza.is('presence')) {
             if(stanza.attrs.type === "probe") {
                 if(client.roster) {
-                
+                    RosterItem.find(client.roster, new xmpp.JID(stanza.attrs.from), function(item) {
+                        console.log("----");
+                        console.log(item);
+                    });
                 }
             }
         }
@@ -84,6 +85,7 @@ exports.configure = function(c2s, s2s) {
     c2s.on("recipient_offline", function(stanza) {
         if(stanza.is("presence")) {
             console.log("PRESENCE FOR OFFLINE USER!");
+            console.log(stanza.toString());
         }
     });
 }
