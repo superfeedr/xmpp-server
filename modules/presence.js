@@ -4,6 +4,12 @@ var ltx = require('ltx');
 // http://xmpp.org/extensions/xep-0160.html
 exports.name = "presence";
 
+// TODO
+// Deal with 5.1.4.  Directed Presence. 
+// PROBLEM : HOW DO WE INTERRUPT A STANZA?
+// IMPLEMENT PRIORITY (IN ROUTER AS WELL!)
+// 
+
 function Presence(client) {
     client.initial_presence_sent = false;
     
@@ -47,6 +53,16 @@ function Presence(client) {
                         });
                     }
                 }
+            } else {
+                if(stanza.attrs.type === "subscribe") {
+                    if(client.roster) {
+                        client.roster.add(new xmpp.JID(stanza.attrs.from).bare().toString(), function(item) {
+                            if(['both', 'to'].indexOf(item.state) == -1) {
+                                client.roster.emit('add', item);
+                            }
+                        });
+                    }
+                }
             }
         }
     });
@@ -58,9 +74,24 @@ function Presence(client) {
         if (stanza.is('presence')) {
             if(stanza.attrs.type === "probe") {
                 if(client.roster) {
-                    RosterItem.find(client.roster, new xmpp.JID(stanza.attrs.from), function(item) {
-                        console.log("----");
-                        console.log(item);
+                    client.roster.itemForJid(new xmpp.JID(stanza.attrs.from).bare().toString(), function(item) {
+                        if(["from", "both"].indexOf(item.state) >= 0) {
+                            // TODO: Blocking Outbound Presence Notifications.
+                            var clients = client.router.connectedClientsForJid(new xmpp.JID(stanza.attrs.to).bare().toString());
+                            var presence = null;
+                            if(clients.length === 0) {
+                                presence = new xmpp.Element('presence', {from: client.jid.bare().toString(), type: "error", to: stanza.attrs.from});
+                            } else {
+                                // We actually need to send the last received presence..; which means we have to store it! TODO
+                                presence = new xmpp.Element('presence', {from: client.jid.bare().toString(),  to: stanza.attrs.from});
+                            }
+                            client.server.emit('inStanza', client, stanza); // TODO: Blocking Outbound Presence Notifications.
+                        }
+                        else {
+                            // Send an error!
+                            var error = new xmpp.Element('presence', {from: client.jid.bare().toString(), type: "error", to: stanza.attrs.from});
+                            client.server.emit('inStanza', client, error); 
+                        }
                     });
                 }
             }
@@ -73,11 +104,14 @@ function Presence(client) {
         client.server.router.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
             if(client.jid.resource != jid.resource) {
                 stanza.attrs.to = jid.toString();
-                client.emit('outStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
+                client.server.emit('inStanza', client, stanza); // TODO: Blocking Outbound Presence Notifications.
             }
         });
+        client.roster.eachSubscription(["from", "both"], function(item) {
+            stanza.attrs.to = item.jid;
+            client.server.emit('inStanza', client, stanza); // TODO: Blocking Outbound Presence Notifications.
+        });
     });
-    
 }
 
 exports.mod = Presence;
@@ -85,7 +119,6 @@ exports.configure = function(c2s, s2s) {
     c2s.on("recipient_offline", function(stanza) {
         if(stanza.is("presence")) {
             console.log("PRESENCE FOR OFFLINE USER!");
-            console.log(stanza.toString());
         }
     });
 }

@@ -17,6 +17,22 @@ exports.name = "roster";
 function Roster(client) {
     client.roster = new RosterStorage();
     
+    client.roster.on('add', function(item) {
+        // console.log("USER JUST SUBSCRIBED AND WANTS TO ADD A ROSTER ITEM");
+        //
+        // <iq type='set'>
+        //   <query xmlns='jabber:iq:roster'>
+        //     <item
+        //         jid='contact@example.org'
+        //         subscription='none'
+        //         ask='subscribe'
+        //         name='MyContact'>
+        //       <group>MyBuddies</group>
+        //     </item>
+        //   </query>
+        // </iq>
+    });
+    
     client.on('auth-success', function(jid) {
         client.roster.owner = jid.bare().toString();
     });
@@ -37,6 +53,7 @@ function Roster(client) {
                 });
             }
             else if(stanza.attrs.type === "set") {
+                stanza.attrs.type = "result";
                 var i = query.getChild('item', "jabber:iq:roster");
                 RosterStorage.find(new xmpp.JID(stanza.attrs.from).bare().toString(), function(roster) {
                     RosterItemStorage.find(roster, new xmpp.JID(i.attrs.jid).bare().toString(), function(item) {
@@ -47,7 +64,7 @@ function Roster(client) {
                                 stanza.attrs.from = client.server.options.domain; // Remove the from field.
                                 client.server.router.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
                                     stanza.attrs.to = jid.toString();
-                                    client.server.emit(client, 'inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
+                                    client.server.emit('inStanza', client, stanza); // TODO: Blocking Outbound Presence Notifications.
                                 });
                             });
                         } else {
@@ -67,7 +84,7 @@ function Roster(client) {
                                 stanza.attrs.from = client.server.options.domain; // Remove the from field.
                                 client.server.router.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
                                     stanza.attrs.to = jid.toString();
-                                    client.server.emit(client, 'inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
+                                    client.server.emit('inStanza', client, stanza); // TODO: Blocking Outbound Presence Notifications.
                                 });
                             });
                         }
