@@ -46,4 +46,6 @@ function SoftwareVersionMixin(client) {
 }
 
 exports.mod = SoftwareVersionMixin;
+exports.configure = function(c2s, s2s) {
+}
 

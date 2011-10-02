@@ -20,4 +20,6 @@ function VCardMixin(client) {
 }
 
 exports.mod = VCardMixin;
+exports.configure = function(c2s, s2s) {
+}
 

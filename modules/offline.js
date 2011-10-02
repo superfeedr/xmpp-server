@@ -15,15 +15,16 @@ function RecipientOffline(client) {
 }
 
 exports.mod = RecipientOffline;
-exports.storeOfflineMessage = function(stanza) {
-    if(stanza.is("message")) {
-        stanza.c("delay", {xmlns: 'urn:xmpp:delay', from: '', stamp: ISODateString(new Date())}).t("Offline Storage");
-        (new Message(new xmpp.JID(stanza.attrs.to).bare().toString(), stanza.toString())).save(function() {
-            // not much
-        });
-    }
+exports.configure = function(c2s, s2s) {
+    c2s.on("recipient_offline", function(stanza) {
+        if(stanza.is("message")) {
+            stanza.c("delay", {xmlns: 'urn:xmpp:delay', from: '', stamp: ISODateString(new Date())}).t("Offline Storage");
+            (new Message(new xmpp.JID(stanza.attrs.to).bare().toString(), stanza.toString())).save(function() {
+                // not much
+            });
+        }
+    });
 }
-
 
 function ISODateString(d) {
     function pad(n){

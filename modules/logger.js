@@ -41,3 +41,5 @@ function Logger(client) {
 }
 
 exports.mod = Logger;
+exports.configure = function(c2s, s2s) {
+}

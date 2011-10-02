@@ -24,4 +24,6 @@ function DiscoInfoMixin(client) {
 }
 
 exports.mod = DiscoInfoMixin;
+exports.configure = function(c2s, s2s) {
+}
 

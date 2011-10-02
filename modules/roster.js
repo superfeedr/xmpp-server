@@ -81,4 +81,6 @@ function Roster(client) {
 }
 
 exports.mod = Roster;
+exports.configure = function(c2s, s2s) {
+}
 

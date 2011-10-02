@@ -53,7 +53,7 @@ function Presence(client) {
         }
     });
 
-    client.on('outStanza', function(stanza) {
+    client.on('outStanza', function(stz) {
         // Section 5.1.3 in http://xmpp.org/rfcs/rfc3921.html#presence
         // TODO : HANDLE THINGS WHENE THE CLIENT IS OFFLINE TOO!
         var stanza = ltx.parse(stz.toString());
@@ -80,4 +80,11 @@ function Presence(client) {
 }
 
 exports.mod = Presence;
+exports.configure = function(c2s, s2s) {
+    c2s.on("recipient_offline", function(stanza) {
+        if(stanza.is("presence")) {
+            console.log("PRESENCE FOR OFFLINE USER!");
+        }
+    });
+}
 
