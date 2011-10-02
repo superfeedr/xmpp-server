@@ -19,12 +19,12 @@ function Presence(client) {
                         client.roster.eachSubscription(["to", "both"], function(item) {
                             stanza.attrs.type = "probe";
                             stanza.attrs.to = item.jid;
-                            client.server.emit(client, 'inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
+                            client.server.emit('inStanza', client, stanza); // TODO: Blocking Outbound Presence Notifications.
                         });
                         client.roster.subscriptions(["from", "both"], function(jids) {
                             jids.forEach(function(jid) {
                                 stanza.attrs.to = jid;
-                                client.server.emit(client, 'inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
+                                client.server.emit('inStanza', client, stanza); // TODO: Blocking Outbound Presence Notifications.
                             });
                         });
                     }
@@ -32,7 +32,7 @@ function Presence(client) {
                     client.server.router.connectedClientsForJid(stanza.attrs.from).forEach(function(jid) {
                         if(client.jid.resource != jid.resource) {
                             stanza.attrs.to = jid.toString();
-                            client.server.emit(client, 'inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
+                            client.server.emit('inStanza', client, stanza); // TODO: Blocking Outbound Presence Notifications.
                         }
                     })
                 }
@@ -42,7 +42,7 @@ function Presence(client) {
                         client.roster.subscriptions(["from", "both"], function(jids) {
                             jids.forEach(function(jid) {
                                 stanza.attrs.to = jid;
-                                client.server.emit(client, 'inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
+                                client.server.emit('inStanza', client, stanza); // TODO: Blocking Outbound Presence Notifications.
                             });
                         });
                     }
