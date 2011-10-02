@@ -47,7 +47,7 @@ function Roster(client) {
                                 stanza.attrs.from = client.server.options.domain; // Remove the from field.
                                 client.server.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
                                     stanza.attrs.to = jid.toString();
-                                    client.server.emit('inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
+                                    client.server.emit(client, 'inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
                                 });
                             });
                         } else {
@@ -67,7 +67,7 @@ function Roster(client) {
                                 stanza.attrs.from = client.server.options.domain; // Remove the from field.
                                 client.server.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
                                     stanza.attrs.to = jid.toString();
-                                    client.server.emit('inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
+                                    client.server.emit(client, 'inStanza', stanza); // TODO: Blocking Outbound Presence Notifications.
                                 });
                             });
                         }
