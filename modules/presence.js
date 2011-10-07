@@ -118,7 +118,7 @@ exports.mod = Presence;
 exports.configure = function(c2s, s2s) {
     c2s.on("recipient_offline", function(stanza) {
         if(stanza.is("presence")) {
-            console.log("PRESENCE FOR OFFLINE USER!");
+            //console.log("PRESENCE FOR OFFLINE USER!");
         }
     });
 }
