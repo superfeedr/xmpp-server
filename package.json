@@ -9,7 +9,7 @@
         "node-xmpp": "https://github.com/superfeedr/node-xmpp/tarball/master",
         "node-stringprep": ">=0.0.5",
         "redis": ">=0.6.7",
-        "websocket": ">=0.0.17",
+        "websocket": "https://github.com/superfeedr/WebSocket-Node/tarball/draft13",
         "winston": ">=0.4.0"
     },
     "repositories": [{
