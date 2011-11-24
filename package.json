@@ -6,7 +6,7 @@
     "author": "Julien Genestoux <julien@superfeedr.com> (http://superfeedr.com)",
     "main": "./lib/server",
     "dependencies": {
-        "node-xmpp": "https://github.com/superfeedr/node-xmpp/tarball/master",
+        "node-xmpp": ">=0.3.0",
         "node-stringprep": ">=0.0.5",
         "redis": ">=0.6.7",
         "websocket": "https://github.com/superfeedr/WebSocket-Node/tarball/draft13",
