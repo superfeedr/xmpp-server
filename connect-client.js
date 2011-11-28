@@ -18,4 +18,5 @@ var cl = new xmpp.Client({
 cl.on('online', function () {
     cl.send(new xmpp.Element('presence', {}).c('show').t('chat').up().c('status').t('If I\'m online, then, I\'m fine!'));
     sys.puts('You win');
+    process.exit(0);
 });
