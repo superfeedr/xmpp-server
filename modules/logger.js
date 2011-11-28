@@ -26,6 +26,11 @@ function Logger(client) {
     client.on('auth-success', function(jid) {
         logger.info(format_log(client, "auth-success " + jid));
     });
+    
+    client.on('online', function() {
+        logger.info(format_log(client, "online " + client.jid));
+    });
+    
 
     client.on('auth-failure', function(jid) {
         logger.info(format_log(client, "auth-failure " + jid));

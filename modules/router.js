@@ -10,7 +10,7 @@ function Router(server) {
 
 /**
 * Routes messages */
-Router.prototype.route = function(stanza) {
+Router.prototype.route = function(stanza, from) {
     var self = this;
     stanza.attrs.xmlns = 'jabber:client';
     if (stanza.attrs && stanza.attrs.to && stanza.attrs.to !== this.server.options.domain) {
@@ -20,14 +20,14 @@ Router.prototype.route = function(stanza) {
             var sent = false, resource;
             for (resource in self.sessions[toJid.bare().toString()]) {
                 if (toJid.bare().toString() === toJid.toString() || toJid.resource === resource) {
-                    self.sessions[toJid.bare().toString()][resource].emit('outStanza', stanza); 
+                    self.sessions[toJid.bare().toString()][resource].send(stanza); 
                     sent = true;
                 }
             }
             // We couldn't find a connected jid that matches the destination. Let's send it to everyone
             if (!sent) {
                 for (resource in self.sessions[toJid.bare().toString()]) {
-                    self.sessions[toJid.bare().toString()][resource].emit('outStanza', stanza); 
+                    self.sessions[toJid.bare().toString()][resource].send(stanza); 
                     sent = true;
                 }                
             }
