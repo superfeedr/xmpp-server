@@ -7,6 +7,7 @@
     "main": "./lib/server",
     "dependencies": {
         "node-xmpp": ">=0.3.0",
+        "ltx": "0.1.1",
         "node-stringprep": ">=0.0.5",
         "redis": ">=0.6.7",
         "websocket": "https://github.com/superfeedr/WebSocket-Node/tarball/draft13",
