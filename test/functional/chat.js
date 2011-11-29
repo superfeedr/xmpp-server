@@ -4,7 +4,6 @@
 
 var sys  = require('sys');
 var xmpp = require('node-xmpp');
-var argv = process.argv;
 var _ = require('underscore');
 var User = require('../../lib/users.js').User;
 fixtures = [["bernard@localhost", "bErnArD"], ["bianca@localhost", "B1anCA"]]; // Fixtures 
@@ -48,7 +47,6 @@ var done = _.after(fixtures.length, function() {
         });
         
         bianca.send(new xmpp.Element('message', {to: "bernard@localhost"}).c('body').t('Hello Bernard!'));
-        
     });
     
     
