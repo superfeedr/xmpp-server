@@ -9,7 +9,7 @@ exports.name = "offline";
 function RecipientOffline(client) {
     client.on("online", function() {
         Message.for(client.jid.bare().toString(), function(message) {
-            client.emit('outStanza', ltx.parse(message.stanza));
+            client.send(ltx.parse(message.stanza));
         });
     });
 }
