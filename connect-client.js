@@ -1,22 +1,51 @@
 /**
- * This attempts to connect to the XMPP server.
- **/
+* This attempts to connect to the XMPP server.
+**/
 var sys = require('sys');
 var xmpp = require('node-xmpp');
-var argv = process.argv;
+var _ = require('underscore');
+var User = require('../../lib/users.js').User;
 
-if (argv.length != 4) {
-    sys.puts('Usage: node connect-client.js <my-jid> <my-password>');
-    process.exit(1);
-}
+fixtures = [["bernard@localhost", "bErnArD"]]; // Fixtures 
 
-var cl = new xmpp.Client({
-    jid: argv[2],
-    password: argv[3]
+
+describe('Connect client', function(){
+    
+    beforeEach(function(proceed){
+        var ready = _.after(fixtures.length, function() {
+            proceed();
+        });
+        _.each(fixtures, function(fixture) {
+            User.register(fixture[0], fixture[1], {
+                force: true,
+                success: ready,
+                error: function(err) {
+                    console.log("Couldn't add users.");
+                    process.exit(1);
+                }
+            });
+        });
+    });
+    
+    it('should connect just fine when the password is correct', function(done){
+        var cl = new xmpp.Client({jid: "bernard@localhost", password: "bErnArD"});
+        cl.on('online', function () {
+            done();
+        });
+    });
+    
+    it('should trigger an error when the password is not correct', function(done){
+        var cl = new xmpp.Client({jid: "bernard@localhost", password: "bErnArD0"});
+        cl.on('online', function () {
+            throw function() {};
+        });
+        cl.on('error', function(err) {
+            if(err === "XMPP authentication failure") {
+                done();
+            }
+        });
+    });
+    
 });
 
-cl.on('online', function () {
-    cl.send(new xmpp.Element('presence', {}).c('show').t('chat').up().c('status').t('If I\'m online, then, I\'m fine!'));
-    sys.puts('You win');
-    process.exit(0);
-});
+
