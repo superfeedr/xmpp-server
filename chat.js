@@ -9,7 +9,6 @@ var User = require('../../lib/users.js').User;
 fixtures = [["bernard@localhost", "bErnArD"], ["bianca@localhost", "B1anCA"]]; // Fixtures 
 
 
-
 describe('A small chat', function(){
     var bernard, bianca = null;
 
