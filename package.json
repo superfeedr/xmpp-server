@@ -7,7 +7,6 @@
     "main": "./lib/server",
     "dependencies": {
         "node-xmpp": ">=0.3.1",
-        "ltx": ">=0.1.1",
         "redis": ">=0.7.1",
         "websocket": ">=0.0.19"
         "winston": ">=0.5.8"
