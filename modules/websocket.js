@@ -7,6 +7,42 @@ exports.name = "mod_websocket";
 function WebsocketServer() {
 }
 
+// This is a wrapper around the ws.
+function WebsocketWrapper(ws) {
+    var self = this;
+    this.ws = ws;
+    this.writable = true;
+    
+    this.ws.on('message', function(message) {
+        if (message.type === 'utf8') {
+            string = message.utf8Data
+            if(string.match(/<stream:stream .*\/>/)) {
+                string = string.replace("/>", ">");
+            }
+            self.emit('data', string);
+        }
+        else if (message.type === 'binary') {
+            /* No support binary for now!*/
+        }
+    });
+    this.ws.on('close', function(id) {
+        self.emit('end');
+    });
+}
+
+WebsocketWrapper.prototype.serializeStanza = function(s, clbk) {
+    clbk(s.toString()); // No specific serialization
+}
+
+WebsocketWrapper.prototype.end = function() {
+    this.ws.close();
+}
+
+WebsocketWrapper.prototype.write = function(data) {
+    this.ws.sendUTF(data);
+}
+
+
 exports.mod = WebsocketServer;
 exports.configure = function(c2s, s2s) {
     var http = HttpServer.createServer(function(request, response) {
@@ -23,49 +59,8 @@ exports.configure = function(c2s, s2s) {
     });
     
     ws.on('request', function(request) {
-        if (!originIsAllowed(request.origin)) {
-          // Make sure we only accept requests from an allowed origin
-          request.reject();
-          return;
-        }
-
-        var socket = request.accept(null, request.origin);
-        
-        /*Let's now prepare the API for socket*/
-        socket.writable = true;
-        socket.serializeStanza = function(s, clbk) {
-            clbk(s.toString()); // No specific serialization
-        }
-        socket.end = function() {
-            socket.close();
-        }
-        socket.write = function(data) {
-            socket.sendUTF(data);
-        }
-        
+        var socket = new WebsocketWrapper(request.accept(null, request.origin));
         c2s.acceptConnection(socket); // Let's go!
-        
-        socket.on('message', function(message) {
-            if (message.type === 'utf8') {
-                string = message.utf8Data
-                if(string.match(/<stream:stream .*\/>/)) {
-                    string = string.replace("/>", ">");
-                }
-                socket.emit('data', string);
-            }
-            else if (message.type === 'binary') {
-                /* No support binary for now!*/
-            }
-        });
-        
-        socket.on('close', function(id) {
-            socket.emit('end');
-        });
     });
-
-    function originIsAllowed(origin) {
-      // put logic here to detect whether the specified origin is allowed.
-      return true;
-    }
 }
 
