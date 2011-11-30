@@ -58,7 +58,7 @@ exports.configure = function(c2s, s2s) {
             }
         });
         
-        socket.on('close', function(socket) {
+        socket.on('close', function(id) {
             socket.emit('end');
         });
     });
