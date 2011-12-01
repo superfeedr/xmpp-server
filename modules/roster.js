@@ -37,7 +37,7 @@ function Roster(client) {
         client.roster.owner = jid.bare().toString();
     });
     
-    client.on('inStanza', function(stz) {
+    client.on('stanza', function(stz) {
         var self = this;
         var stanza = ltx.parse(stz.toString());
         var query = null;
@@ -49,7 +49,7 @@ function Roster(client) {
                         query.c("item", {jid: item.jid, name: item.name, subscription: item.state});
                     });
                     stanza.attrs.to = stanza.attrs.from;
-                    client.emit('outStanza', stanza); 
+                    client.send(stanza); 
                 });
             }
             else if(stanza.attrs.type === "set") {
@@ -64,7 +64,7 @@ function Roster(client) {
                                 stanza.attrs.from = client.server.options.domain; // Remove the from field.
                                 client.server.router.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
                                     stanza.attrs.to = jid.toString();
-                                    client.server.emit('inStanza', client, stanza); // TODO: Blocking Outbound Presence Notifications.
+                                    client.send(stanza); // TODO: Blocking Outbound Presence Notifications.
                                 });
                             });
                         } else {
@@ -84,7 +84,7 @@ function Roster(client) {
                                 stanza.attrs.from = client.server.options.domain; // Remove the from field.
                                 client.server.router.connectedClientsForJid(client.jid.toString()).forEach(function(jid) {
                                     stanza.attrs.to = jid.toString();
-                                    client.server.emit('inStanza', client, stanza); // TODO: Blocking Outbound Presence Notifications.
+                                    client.send(stanza); // TODO: Blocking Outbound Presence Notifications.
                                 });
                             });
                         }
