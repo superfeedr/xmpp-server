@@ -7,18 +7,18 @@ var ltx = require('ltx');
 exports.name = "mod_disco_info";
 
 function DiscoInfoMixin(client) {
-    client.on('inStanza', function(stz) {
+    client.on('stanza', function(stz) {
         var stanza = ltx.parse(stz.toString());
         if (stanza.is('iq') && (query = stanza.getChild('query', "http://jabber.org/protocol/disco#info"))) {
             stanza.attrs.type = "error";
             stanza.attrs.to = stanza.attrs.from;
             delete stanza.attrs.from;
-            client.emit('outStanza', stanza);
+            client.send(stanza);
         } else if (stanza.is('iq') && (query = stanza.getChild('query', "http://jabber.org/protocol/disco#items"))) {
             stanza.attrs.type = "error";
             stanza.attrs.to = stanza.attrs.from;
             delete stanza.attrs.from;
-            client.emit('outStanza', stanza);
+            client.send(stanza);
         }
     });
 }
