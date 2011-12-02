@@ -2,8 +2,9 @@
 * This connnects 2 clients to the server and makes sure they converse adequately!
 **/
 
-var sys  = require('sys');
 var xmpp = require('node-xmpp');
+var server  = require('../../lib/server.js');
+
 var _ = require('underscore');
 var User = require('../../lib/users.js').User;
 fixtures = [["romeo@localhost", "romeo"], ["juliet@localhost", "juliet"]]; // Fixtures 
@@ -14,8 +15,14 @@ describe('When a user is offline', function(){
 
     var romeoSays = "O blessed, blessed night! I am afeard. \
        Being in night, all this is but a dream, \
-       Too flattering-sweet to be substantial."
-
+       Too flattering-sweet to be substantial.";
+    
+    before(function(proceed) {
+        server.run({port: 5222, domain: 'localhost'}, function() {
+            proceed();
+        });
+    });
+    
     beforeEach(function(proceed){
         var ready = _.after(fixtures.length, function() {
             romeo = new xmpp.Client({
