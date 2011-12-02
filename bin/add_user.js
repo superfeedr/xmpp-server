@@ -1,9 +1,9 @@
-var sys = require('sys');
+var util = require('util');
 var User = require('../lib/users.js').User;
 var argv = process.argv;
 
 if (argv.length != 4) {
-    sys.puts('Usage: node add_user.js <my-jid> <my-password>');
+    util.puts('Usage: node add_user.js <my-jid> <my-password>');
     process.exit(1);
 }
 
