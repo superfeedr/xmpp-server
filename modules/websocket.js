@@ -50,23 +50,26 @@ WebsocketWrapper.prototype.write = function(data) {
 
 
 exports.mod = WebsocketServer;
-exports.configure = function(c2s, s2s) {
-    var http = HttpServer.createServer(function(request, response) {
-        response.writeHead(404);
-        response.end();
-    });
+exports.configure = function(c2s, s2s, config) {
+    if(config) {
+        config.port = typeof(config.port) != 'undefined' ? config.port : 5280;
+        var http = HttpServer.createServer(function(request, response) {
+            response.writeHead(404);
+            response.end();
+        });
 
-    http.listen(5280, function() {
-    });
-    
-    var ws = new WebSocketServer({
-        httpServer: http,
-        autoAcceptConnections: false
-    });
-    
-    ws.on('request', function(request) {
-        var socket = new WebsocketWrapper(request.accept(null, request.origin));
-        c2s.acceptConnection(socket); // Let's go!
-    });
+        http.listen(config.port, function() {
+        });
+
+        var ws = new WebSocketServer({
+            httpServer: http,
+            autoAcceptConnections: false
+        });
+
+        ws.on('request', function(request) {
+            var socket = new WebsocketWrapper(request.accept(null, request.origin));
+            c2s.acceptConnection(socket); // Let's go!
+        });
+    }
 }
 
