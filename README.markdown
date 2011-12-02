@@ -52,6 +52,7 @@ There is a server running at [ouvre-boite.com](xmpp://ouvre-boite.com). You can 
 * Digets Auth
 * Roster
 * Presence
+* Pass on global configuration to modules.
 
 
 ## Dependencies
