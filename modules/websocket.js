@@ -59,7 +59,7 @@ exports.configure = function(c2s, s2s) {
     http.listen(5280, function() {
     });
     
-    ws = new WebSocketServer({
+    var ws = new WebSocketServer({
         httpServer: http,
         autoAcceptConnections: false
     });
