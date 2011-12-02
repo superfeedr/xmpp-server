@@ -15,30 +15,35 @@ Router.prototype.route = function(stanza, from) {
     stanza.attrs.xmlns = 'jabber:client';
     if (stanza.attrs && stanza.attrs.to && stanza.attrs.to !== this.server.options.domain) {
         var toJid = new xmpp.JID(stanza.attrs.to);
-        if (self.sessions.hasOwnProperty(toJid.bare().toString())) {
-            // Now loop over all the sesssions and only send to the right jid(s)
-            var sent = false, resource;
-            for (resource in self.sessions[toJid.bare().toString()]) {
-                if (toJid.bare().toString() === toJid.toString() || toJid.resource === resource) {
-                    self.sessions[toJid.bare().toString()][resource].send(stanza); 
-                    sent = true;
+        if(toJid.domain === this.server.options.domain) {
+            if (self.sessions.hasOwnProperty(toJid.bare().toString())) {
+                // Now loop over all the sesssions and only send to the right jid(s)
+                var sent = false, resource;
+                for (resource in self.sessions[toJid.bare().toString()]) {
+                    if (toJid.bare().toString() === toJid.toString() || toJid.resource === resource) {
+                        self.sessions[toJid.bare().toString()][resource].send(stanza); 
+                        sent = true;
+                    }
+                }
+                // We couldn't find a connected jid that matches the destination. Let's send it to everyone
+                if (!sent) {
+                    for (resource in self.sessions[toJid.bare().toString()]) {
+                        self.sessions[toJid.bare().toString()][resource].send(stanza); 
+                        sent = true;
+                    }                
+                }
+                // We couldn't actually send to anyone!
+                if (!sent) {
+                    delete self.sessions[toJid.bare().toString()];
+                    self.server.emit("recipient_offline", stanza);
                 }
             }
-            // We couldn't find a connected jid that matches the destination. Let's send it to everyone
-            if (!sent) {
-                for (resource in self.sessions[toJid.bare().toString()]) {
-                    self.sessions[toJid.bare().toString()][resource].send(stanza); 
-                    sent = true;
-                }                
-            }
-            // We couldn't actually send to anyone!
-            if (!sent) {
-                delete self.sessions[toJid.bare().toString()];
+            else {
                 self.server.emit("recipient_offline", stanza);
             }
         }
         else {
-            self.server.emit("recipient_offline", stanza);
+            this.server.s2s.send(stanza); // this is for S2S.
         }
     }
     else {
