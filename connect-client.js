@@ -7,13 +7,18 @@ var server  = require('../../lib/server.js');
 var _ = require('underscore');
 var User = require('../../lib/users.js').User;
 
-fixtures = [["bernard@localhost", "bErnArD"]]; // Fixtures 
+fixtures = [["bernard@bernard.local", "bErnArD"]]; // Fixtures 
 
+// Mocking SRV reolution!
+var dns  = require('dns');
+dns.resolveSrv = function(domain, callback) {
+    callback(null, [{name: '0.0.0.0', port: 5222, priority: 5, weight:10}]);
+}
 
 describe('Connect client', function(){
     
     before(function(proceed) {
-        server.run({port: 5222, domain: 'localhost'}, function() {
+        server.run({port: 5222, domain: 'bernard.local', bindAddress: '0.0.0.0'}, function() {
             proceed();
         });
     });
@@ -35,14 +40,14 @@ describe('Connect client', function(){
     });
     
     it('should connect just fine when the password is correct', function(done){
-        var cl = new xmpp.Client({jid: "bernard@localhost", password: "bErnArD"});
+        var cl = new xmpp.Client({jid: "bernard@bernard.local", password: "bErnArD"});
         cl.on('online', function () {
             done();
         });
     });
     
     it('should trigger an error when the password is not correct', function(done){
-        var cl = new xmpp.Client({jid: "bernard@localhost", password: "bErnArD0"});
+        var cl = new xmpp.Client({jid: "bernard@bernard.local", password: "bErnArD0"});
         cl.on('online', function () {
             throw function() {};
         });
