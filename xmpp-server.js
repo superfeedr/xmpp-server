@@ -8,7 +8,9 @@ if(process.argv.length === 2) {
 var configuration = require(process.argv[process.argv.length -1]);
 
 var server = require('./lib/server.js');
-server.run(configuration.config);
+server.run(configuration.config, function() {
+    // Server ready!
+});
 
 
 
