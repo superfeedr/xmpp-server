@@ -1,8 +1,9 @@
 /**
 * This attempts to connect to the XMPP server.
 **/
-var sys = require('sys');
 var xmpp = require('node-xmpp');
+var server  = require('../../lib/server.js');
+
 var _ = require('underscore');
 var User = require('../../lib/users.js').User;
 
@@ -10,6 +11,12 @@ fixtures = [["bernard@localhost", "bErnArD"]]; // Fixtures
 
 
 describe('Connect client', function(){
+    
+    before(function(proceed) {
+        server.run({port: 5222, domain: 'localhost'}, function() {
+            proceed();
+        });
+    });
     
     beforeEach(function(proceed){
         var ready = _.after(fixtures.length, function() {
