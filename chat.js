@@ -1,16 +1,21 @@
 /**
 * This connnects 2 clients to the server and makes sure they converse adequately!
 **/
+var xmpp    = require('node-xmpp');
+var server  = require('../../lib/server.js');
+var _       = require('underscore');
 
-var sys  = require('sys');
-var xmpp = require('node-xmpp');
-var _ = require('underscore');
 var User = require('../../lib/users.js').User;
 fixtures = [["bernard@localhost", "bErnArD"], ["bianca@localhost", "B1anCA"]]; // Fixtures 
 
-
 describe('A small chat', function(){
     var bernard, bianca = null;
+
+    before(function(proceed) {
+        server.run({port: 5222, domain: 'localhost'}, function() {
+            proceed();
+        });
+    });
 
     beforeEach(function(proceed){
         var ready = _.after(fixtures.length, function() {
@@ -61,7 +66,7 @@ describe('A small chat', function(){
         });
         bianca.send(new xmpp.Element('message', {to: "bernard@localhost"}).c('body').t(biancaSays));
     });
-    
+
     it('bianca should get bernard\'s messages', function(done){
         var bernardSays = 'Hi Bianca!';
         bianca.on('stanza', function(stanza) {
