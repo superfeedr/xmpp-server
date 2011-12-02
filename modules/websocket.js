@@ -1,5 +1,7 @@
 var WebSocketServer   = require('websocket').server;
 var HttpServer = require('http');
+var util = require('util');
+var EventEmitter = require('events').EventEmitter;
 
 
 exports.name = "mod_websocket";
@@ -9,6 +11,8 @@ function WebsocketServer() {
 
 // This is a wrapper around the ws.
 function WebsocketWrapper(ws) {
+    EventEmitter.call(this);
+    
     var self = this;
     this.ws = ws;
     this.writable = true;
@@ -29,6 +33,8 @@ function WebsocketWrapper(ws) {
         self.emit('end');
     });
 }
+
+util.inherits(WebsocketWrapper, EventEmitter);
 
 WebsocketWrapper.prototype.serializeStanza = function(s, clbk) {
     clbk(s.toString()); // No specific serialization
