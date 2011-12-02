@@ -8,6 +8,7 @@ exports.name = "mod_disco_info";
 
 function DiscoInfoMixin(client) {
     client.on('stanza', function(stz) {
+        var query = null;
         var stanza = ltx.parse(stz.toString());
         if (stanza.is('iq') && (query = stanza.getChild('query', "http://jabber.org/protocol/disco#info"))) {
             stanza.attrs.type = "error";
