@@ -48,9 +48,8 @@ WebsocketWrapper.prototype.write = function(data) {
     this.ws.sendUTF(data);
 }
 
-
 exports.mod = WebsocketServer;
-exports.configure = function(c2s, s2s, config) {
+exports.configure = function(server, config) {
     if(config) {
         config.port = typeof(config.port) != 'undefined' ? config.port : 5280;
         var http = HttpServer.createServer(function(request, response) {
@@ -68,7 +67,7 @@ exports.configure = function(c2s, s2s, config) {
 
         ws.on('request', function(request) {
             var socket = new WebsocketWrapper(request.accept(null, request.origin));
-            c2s.acceptConnection(socket); // Let's go!
+            server.acceptConnection(socket); // Let's go!
         });
     }
 }

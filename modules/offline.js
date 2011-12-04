@@ -6,17 +6,12 @@ var ltx = require('ltx');
 // http://xmpp.org/extensions/xep-0160.html
 exports.name = "offline";
 
-function RecipientOffline(client) {
-    client.on("online", function() {
-        Message.for(client.jid.bare().toString(), function(message) {
-            client.send(ltx.parse(message.stanza));
-        });
-    });
+function Offline() {
 }
 
-exports.mod = RecipientOffline;
-exports.configure = function(c2s, s2s) {
-    c2s.on("recipient_offline", function(stanza) {
+exports.mod = Offline;
+exports.configure = function(server, config) {
+    server.router.on("recipientOffline", function(stanza) {
         if(stanza.is("message")) {
             stanza.c("delay", {xmlns: 'urn:xmpp:delay', from: '', stamp: ISODateString(new Date())}).t("Offline Storage");
             (new Message(new xmpp.JID(stanza.attrs.to).bare().toString(), stanza.toString())).save(function() {
@@ -24,6 +19,15 @@ exports.configure = function(c2s, s2s) {
             });
         }
     });
+    
+    server.on('connect', function(client) {
+        client.on("online", function() {
+            Message.for(client.jid.bare().toString(), function(message) {
+                client.send(ltx.parse(message.stanza));
+            });
+        });
+    });
+    
 }
 
 function ISODateString(d) {

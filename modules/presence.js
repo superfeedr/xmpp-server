@@ -10,7 +10,7 @@ exports.name = "presence";
 // IMPLEMENT PRIORITY (IN ROUTER AS WELL!)
 // 
 
-function Presence(client) {
+function Presence() {
     client.initial_presence_sent = false;
     
     client.on('inStanza', function(stz) {
@@ -115,8 +115,8 @@ function Presence(client) {
 }
 
 exports.mod = Presence;
-exports.configure = function(c2s, s2s) {
-    c2s.on("recipient_offline", function(stanza) {
+exports.configure = function(server, config) {
+    server.router.on("recipientOffline", function(stanza) {
         if(stanza.is("presence")) {
             //console.log("PRESENCE FOR OFFLINE USER!");
         }

@@ -1,5 +1,7 @@
 var xmpp = require('node-xmpp');
 var ltx = require('ltx');
+var util = require('util');
+var EventEmitter = require('events').EventEmitter;
 
 /**
 * C2S Router */
@@ -7,6 +9,7 @@ function Router(server) {
     this.server = server;
     this.sessions = {};
 }
+util.inherits(Router, EventEmitter);
 
 /**
 * Routes messages */
@@ -35,11 +38,11 @@ Router.prototype.route = function(stanza, from) {
                 // We couldn't actually send to anyone!
                 if (!sent) {
                     delete self.sessions[toJid.bare().toString()];
-                    self.server.emit("recipient_offline", stanza);
+                    self.emit("recipientOffline", stanza);
                 }
             }
             else {
-                self.server.emit("recipient_offline", stanza);
+                self.emit("recipientOffline", stanza);
             }
         }
         else {

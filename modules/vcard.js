@@ -4,9 +4,7 @@ var ltx = require('ltx');
 // XEP-0054: vcard-temp
 // http://xmpp.org/extensions/xep-0054.html
 
-exports.name = "mod_vcard";
-
-function VCardMixin(client) {
+function VCard(client) {
     client.on('inStanza', function(stz) {
         var stanza = ltx.parse(stz.toString());
         if (stanza.is('iq') && (vCard = stanza.getChild('vCard', "vcard-temp"))) {
@@ -19,7 +17,7 @@ function VCardMixin(client) {
     });
 }
 
-exports.mod = VCardMixin;
-exports.configure = function(c2s, s2s) {
+exports.mod = VCard;
+exports.configure = function(server, config) {
 }
 
