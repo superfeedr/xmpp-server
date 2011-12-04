@@ -38,6 +38,7 @@ describe('A small chat accross 2 servers', function(){
     });
 
     beforeEach(function(proceed){
+        bernard, bianca = null;
         var ready = _.after(fixtures.length, function() {
             bernard = new xmpp.Client({
                 jid: "bernard@bernard.local",
@@ -86,7 +87,6 @@ describe('A small chat accross 2 servers', function(){
         bianca.send(new xmpp.Element('message', {to: "bernard@bernard.local"}).c('body').t(biancaSays));
     });
 
-    // 
     it('bianca should get bernard\'s messages', function(done){
         var bernardSays = 'Hi Bianca!';
         bianca.on('stanza', function(stanza) {
@@ -99,6 +99,30 @@ describe('A small chat accross 2 servers', function(){
         });
         bernard.send(new xmpp.Element('message', {to: "bianca@bianca.local"}).c('body').t(bernardSays));
     });
+    
+    // 
+    // it('bianca and bernard should chat just fine', function(done){
+    //       var bernardSays = 'Ciao Bianca!';
+    //       var responses = _.after(10, function() {
+    //           // done();
+    //       });
+    //       bianca.on('stanza', function(stanza) {
+    //           if (stanza.is('message') && new xmpp.JID(stanza.attrs.from).bare().toString() == "bernard@bernard.local" ) {
+    //               bianca.send(new xmpp.Element('message', {to: "bernard@bernard.local"}).c('body').t(bernardSays));
+    //               responses();
+    //           }
+    //       });
+    //       
+    //       bernard.on('stanza', function(stanza) {
+    //           if (stanza.is('message') && new xmpp.JID(stanza.attrs.from).bare().toString() == "bianca@bianca.local") {
+    //               bernard.send(new xmpp.Element('message', {to: "bianca@bianca.local"}).c('body').t(bernardSays));
+    //               responses();
+    //           }
+    //       });
+    //       
+    //       bernard.send(new xmpp.Element('message', {to: "bianca@bianca.local"}).c('body').t(bernardSays));
+    //   });
+    // 
 
 });
 
