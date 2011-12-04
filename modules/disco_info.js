@@ -4,12 +4,9 @@ var ltx = require('ltx');
 // XEP-0030: Service Discovery
 // http://xmpp.org/extensions/xep-0030.html
 
-exports.name = "mod_disco_info";
-
 function DiscoInfo() {
 }
 
-exports.mod = DiscoInfo;
 exports.configure = function(server, config) {
     server.on('connect', function(client) {
         client.on('stanza', function(stz) {

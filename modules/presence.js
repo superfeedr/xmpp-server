@@ -2,7 +2,6 @@ var xmpp = require('node-xmpp');
 var ltx = require('ltx');
 
 // http://xmpp.org/extensions/xep-0160.html
-exports.name = "presence";
 
 // TODO
 // Deal with 5.1.4.  Directed Presence. 
@@ -114,7 +113,6 @@ function Presence() {
     });
 }
 
-exports.mod = Presence;
 exports.configure = function(server, config) {
     server.router.on("recipientOffline", function(stanza) {
         if(stanza.is("presence")) {

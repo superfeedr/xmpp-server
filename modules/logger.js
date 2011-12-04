@@ -2,8 +2,6 @@ var xmpp = require('node-xmpp');
 var logger = require('winston');
 
 // http://xmpp.org/extensions/xep-0160.html
-exports.name = "logger";
-
 function format_log(client, message) {
     return client.streamId + " : " + message
 }
@@ -11,7 +9,6 @@ function format_log(client, message) {
 function Logger() {
 }
 
-exports.mod = Logger;
 exports.configure = function(server, config) {
     // Config contains the configuration for the logger facility!
     // The logger relies purely on events... 
