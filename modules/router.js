@@ -3,11 +3,14 @@ var ltx = require('ltx');
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
 
+// server.router = new Router(server); // Using the right C2S Router.
+
+
 /**
 * C2S Router */
 function Router(server) {
-    this.server = server;
     this.sessions = {};
+    this.server = server;
 }
 util.inherits(Router, EventEmitter);
 
@@ -97,4 +100,26 @@ Router.prototype.unregisterRoute = function(jid, client) {
 };
 
 
-exports.Router = Router;
+exports.configure = function(server, config) {
+    var router = new Router(server); // Using the right C2S Router.
+    server.on('connect', function(client) {
+        // When the user is online, let's register the route. there could be other things involed here... like presence! 
+        client.on('online', function() {
+            router.registerRoute(client.jid, client);
+        });
+        
+        // When the user is offline, we remove him from the router.
+        client.on('end', function() {
+            if(client.jid) {
+                // We may not have a jid just yet if the client never connected before
+                router.unregisterRoute(client.jid, client);
+            }
+        });
+
+        // this callback is called when the client sends a stanza.
+        client.on('stanza', function(stanza) {
+            router.route(stanza, client);  // Let's send the stanza to the router and let the router decide what to do with it.
+        });
+    });
+    server.router = router; // We attach the router to the server. (Maybe we want to use an event for this actually to indicate that a new router was attached to the server?)
+}
