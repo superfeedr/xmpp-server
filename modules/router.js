@@ -49,7 +49,7 @@ Router.prototype.route = function(stanza, from) {
             }
         }
         else {
-            this.server.s2s.send(stanza); // this is for S2S.
+            self.emit("externalUser", stanza)
         }
     }
     else {
