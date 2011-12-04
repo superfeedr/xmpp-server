@@ -4,8 +4,6 @@ var util = require('util');
 var EventEmitter = require('events').EventEmitter;
 
 
-exports.name = "mod_websocket";
-
 function WebsocketServer() {
 }
 
@@ -48,7 +46,6 @@ WebsocketWrapper.prototype.write = function(data) {
     this.ws.sendUTF(data);
 }
 
-exports.mod = WebsocketServer;
 exports.configure = function(server, config) {
     if(config) {
         config.port = typeof(config.port) != 'undefined' ? config.port : 5280;

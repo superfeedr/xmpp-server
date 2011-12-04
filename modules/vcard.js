@@ -17,7 +17,6 @@ function VCard(client) {
     });
 }
 
-exports.mod = VCard;
 exports.configure = function(server, config) {
 }
 

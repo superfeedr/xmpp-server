@@ -5,8 +5,6 @@ var RosterStorage = r.Roster;
 var RosterItemStorage = r.RosterItem;
 
 // http://xmpp.org/rfcs/rfc3921.html#roster
-exports.name = "roster";
-
 /* Items have : 
 - key(jid)
 - state
@@ -17,7 +15,6 @@ exports.name = "roster";
 function Roster() {
 }
 
-exports.mod = Roster;
 exports.configure = function(server, config) {
 
     server.on("connect", function(client) {
