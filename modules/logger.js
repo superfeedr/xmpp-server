@@ -41,5 +41,12 @@ exports.configure = function(server, config) {
                 logger.info(format_log(client, "registration-failure " + jid));
             });
         });
+        
+        server.on("s2sReady", function(s2s) {
+            // console.log("S2S ready");
+            s2s.on("newStream", function(stream) {
+                // console.log("New Stream");
+            });
+        });
     }
 }

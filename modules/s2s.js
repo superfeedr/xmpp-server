@@ -20,7 +20,7 @@ exports.configure = function(server, config) {
             server.router.route(stanza); 
         });
         server.s2s = s2s;
-        
+        server.emit("s2sReady", s2s);
         server.router.on("externalUser", function(stanza) {
             s2s.send(stanza); // this is for S2S.
         });
