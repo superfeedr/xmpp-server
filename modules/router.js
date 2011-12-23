@@ -122,4 +122,5 @@ exports.configure = function(server, config) {
         });
     });
     server.router = router; // We attach the router to the server. (Maybe we want to use an event for this actually to indicate that a new router was attached to the server?)
+    server.emit("c2sRoutersReady", router);
 }

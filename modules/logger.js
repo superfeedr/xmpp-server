@@ -48,5 +48,9 @@ exports.configure = function(server, config) {
                 // console.log("New Stream");
             });
         });
+        
+        server.on("c2sRoutersReady", function(router) {
+            // console.log("Router ready")
+        })
     }
 }
