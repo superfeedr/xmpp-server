@@ -8,13 +8,11 @@ function S2S() {
 
 exports.configure = function(server, config) {
     if(config) {
-        console.log(config);
         
         var s2s = new xmpp.Router(5269, server.options.bindAddress); // We only use 5269 has the default S2S port.
         // Load TLS key material
         if (config.tls) {
-            console.log(config.tls);
-            s2s.loadCredentials(server.options.domain, config.tls.keyPath, config.tls.certPath);
+            s2s.loadCredentials(config.domain, config.tls.keyPath, config.tls.certPath);
         }
 
         // S2S plugged to C2S.
