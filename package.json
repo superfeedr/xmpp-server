@@ -10,6 +10,7 @@
         "redis": ">=0.7.1",
         "websocket": ">=0.0.19",
         "ltx": ">=0.1.1",
+        "jsconfig": ">=0.1.1",
         "winston": ">=0.5.8"
     },
     "repositories": [{
