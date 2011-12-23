@@ -10,7 +10,7 @@ exports.configure = function(server, config) {
     if(config) {
         console.log(config);
         
-        var s2s = new xmpp.Router(config.port, server.options.bindAddress); // We only use 5269 has the default S2S port.
+        var s2s = new xmpp.Router(5269, server.options.bindAddress); // We only use 5269 has the default S2S port.
         // Load TLS key material
         if (config.tls) {
             console.log(config.tls);
