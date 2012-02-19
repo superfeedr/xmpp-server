@@ -44,9 +44,9 @@ exports.configure = function(server, config) {
         
         server.on("s2sReady", function(s2s) {
             // console.log("S2S ready");
-            s2s.on("newStream", function(stream) {
+            // s2s.on("newStream", function(stream) {
                 // console.log("New Stream");
-            });
+            // });
         });
         
         server.on("c2sRoutersReady", function(router) {
