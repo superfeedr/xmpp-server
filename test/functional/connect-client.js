@@ -18,7 +18,7 @@ dns.resolveSrv = function(domain, callback) {
 describe('Connect client', function(){
     
     before(function(proceed) {
-        server.run({port: 5222, domain: 'bernard.local', bindAddress: '0.0.0.0'}, function() {
+        server.run({port: 5222, domain: 'bernard.local'}, function() {
             proceed();
         });
     });

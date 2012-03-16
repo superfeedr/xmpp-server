@@ -11,7 +11,7 @@ var User = require('../../lib/users.js').User;
 describe('Register a new jid', function(){
     
     before(function(proceed) {
-        server.run({port: 5222, domain: 'localhost', bindAddress: '0.0.0.0'}, function() {
+        server.run({port: 5222, domain: 'localhost'}, function() {
             proceed();
         });
     });

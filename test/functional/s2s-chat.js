@@ -30,8 +30,8 @@ describe('A small chat accross 2 servers', function(){
     var bernard, bianca = null;
 
     before(function(proceed) {
-        server.run({port: 52220, domain: 'bernard.local', bindAddress: '0.0.0.0', s2sPort: 52690}, function() {
-            server.run({port: 52221, domain: 'bianca.local', bindAddress: '0.0.0.0', s2sPort: 52691}, function() {
+        server.run({port: 52220, domain: 'bernard.local',  s2sPort: 52690}, function() {
+            server.run({port: 52221, domain: 'bianca.local', s2sPort: 52691}, function() {
                 proceed();
             });
         });
