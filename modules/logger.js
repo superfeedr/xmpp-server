@@ -3,7 +3,11 @@ var logger = require('winston');
 
 // http://xmpp.org/extensions/xep-0160.html
 function format_log(client, message) {
-    return client.streamId + " : " + message
+    if(typeof(client.streamId) === "undefined") {
+        return [client.socket.remoteAddress, message].join(" ");
+    } else {
+        return [client.socket.remoteAddress, client.streamId, message].join(" "); 
+    }
 }
 
 function Logger() {
