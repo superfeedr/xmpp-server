@@ -14,7 +14,7 @@ function WebsocketWrapper(ws) {
     var self = this;
     this.ws = ws;
     this.writable = true;
-    this.remoteAddress = ws.socket.remoteAddress;
+    this.remoteAddress = ws.remoteAddress;
     
     this.ws.on('message', function(message) {
         if (message.type === 'utf8') {
