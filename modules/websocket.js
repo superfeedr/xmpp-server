@@ -14,6 +14,7 @@ function WebsocketWrapper(ws) {
     var self = this;
     this.ws = ws;
     this.writable = true;
+    this.remoteAddress = ws.socket.remoteAddress;
     
     this.ws.on('message', function(message) {
         if (message.type === 'utf8') {
@@ -45,6 +46,8 @@ WebsocketWrapper.prototype.end = function() {
 WebsocketWrapper.prototype.write = function(data) {
     this.ws.sendUTF(data);
 }
+
+
 
 exports.configure = function(server, config) {
     if(config) {

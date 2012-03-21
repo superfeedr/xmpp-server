@@ -16,6 +16,7 @@ config.cli({
     port:   ['port',   ['p', "xmpp server port",  'number']],
     config: ['c', "load config file", 'path', defaultConfigPath],
     logger: ['logger', [false, "Log to stdout"]],
+    websocket: ['websocket', [false, "Do not listen on websocket connections"]],
 });
 
 config.load(function (args, opts) {
