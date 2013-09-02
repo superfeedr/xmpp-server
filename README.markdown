@@ -3,6 +3,10 @@
 A full XMPP server using node-xmpp, with some modules. Feel free to fork this and configure all the modules you need in server.js
 This server uses Redis as its datastore. 
 
+<strong>
+Unfortunately, the lack of time is slowly killing this project. If you feel like saving it, please, go ahead, message us and we'll set you up as the owner!
+</strong>
+
 ## Installation 
 
 <strong>Beware : this project is really early stage... There are a lot of things to fix :) Install it for fun or for help... but probably not for profit just yet!</strong>
