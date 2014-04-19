@@ -30,7 +30,7 @@
         "email": "julien@superfeedr.com",
         "url": "http://superfeedr.com"
     }],
-    "contributors": ["Stephan Maka", "Julien Genestoux"],
+    "contributors": ["Stephan Maka", "Julien Genestoux", "Archie Sullivan"],
     "licenses": [{
         "type": "GPLv3"
     }],
